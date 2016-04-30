@@ -7,4 +7,4 @@ zur Auswertung verwendeten Skripte.
 
 # Dokumentation
 * [Projektdokumentation](doc/lex_project.pdf)
-* [Präsentation des Projektes](doc/lex_presentation.pdf}
+* [Präsentation des Projektes](doc/lex_presentation.pdf)
