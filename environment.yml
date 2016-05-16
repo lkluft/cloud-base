@@ -1,0 +1,9 @@
+name: cloud-base
+channels:
+- rttools
+dependencies:
+- python>=3.5.1
+- matplotlib>=1.5.1
+- numpy>=1.10.4
+- scipy>=0.17.0
+- typhon>=0.2.16
