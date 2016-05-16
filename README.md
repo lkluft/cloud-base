@@ -6,5 +6,5 @@ Es umfasst sowohl die Dokumentation des aktuellen Projektstatus als auch die
 zur Auswertung verwendeten Skripte.
 
 # Dokumentation
-* [Projektdokumentation](doc/lex_project.pdf)
+* [Abstract (Draft)](doc/LEX_Wolkenhoehe.pdf)
 * [Präsentation des Projektes](doc/lex_presentation.pdf)
