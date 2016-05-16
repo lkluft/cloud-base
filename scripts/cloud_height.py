@@ -11,28 +11,30 @@ import clb.csv as csv
 import clb.plots as plots
 
 
-def main():
+def main(mfilename, cfilename):
     """Main function."""
-    data = clb.csv.read_master('MASTER.txt')
-    date = clb.csv.read_mpl_date('MASTER.txt')
-    ceilo = clb.csv.read_ceilo('CLB.txt')
+    data = clb.csv.read_master(mfilename)
+    date = clb.csv.read_mpl_date(mfilename)
+    ceilo = clb.csv.read_ceilo(cfilename)
     lwr = data['L']
-    T_s = np.nanmean(data['TT002'])
+    T_s = data['TT002']
 
     h = np.linspace(0, 10000, 500)
 
     T_b = clb.lwr_to_temperature(lwr)
-    T_a = clb.standard_atmosphere(h, T_s=T_s)
+    T_a = clb.lapse_rate(T_s, - 0.0065, h) + 273.15
 
-    foo = np.array([clb.find_value(h, T_a, t) for t in T_b])
+    tt_b, hh = np.meshgrid(T_b, h)
 
+    # TODO: Need to get indexing clear. Why does the diagonal() thing work?
+    cloud_height = hh[np.abs(tt_b - T_a).argmin(axis=0)].diagonal()
 
-    plt.plot(date, data['TT002'])
-    plots.plot_lwr(date, lwr)
+    plt.style.use('typhon')
     fig, ax = plots.plot_ceilo(date, ceilo['z'], ceilo['back_scat'])
-    ax.plot(date, foo, color='orange', linewidth=2)
-    plt.show()
+    ax.plot(date, cloud_height, color='orange', linewidth=2, label='Wolkenhöhe')
+    ax.legend()
+    fig.savefig(cfilename.replace('.txt', '.pdf'))
 
 
 if __name__ == '__main__':
-    main()
+    main('MASTER.txt', 'CLB.txt')

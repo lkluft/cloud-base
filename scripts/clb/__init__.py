@@ -35,6 +35,22 @@ def lwr_to_temperature(lwr):
     return (lwr / sp.constants.Stefan_Boltzmann)**0.25
 
 
+def lapse_rate(T_s, lapse_rate, z):
+    """Temperatur decrease with a fixed lapse rate.
+
+    Parameters:
+        T_s (np.array): Surface temperatures.
+        lapse_rate (float): Lapse rate.
+        z (np.array): Height levels.
+
+    Return:
+        np.array: Atmospheric temperature profile (T_s x z).
+
+    """
+    tt, zz = np.meshgrid(T_s, z)
+    return tt + lapse_rate * zz
+
+
 def standard_atmosphere(z=np.linspace(0, 86000, 100), T_s=19., unit='K'):
     """International standard atmosphere temperature at given heights.
 
