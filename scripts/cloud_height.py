@@ -37,4 +37,4 @@ def main(mfilename, cfilename):
 
 
 if __name__ == '__main__':
-    main('MASTER.txt', 'CLB.txt')
+    main('data/MASTER.txt', 'data/CLB.txt')
