@@ -5,6 +5,8 @@ der Lehrexkursion des Meteorologischen Instituts der Universität Hamburg.
 Es umfasst sowohl die Dokumentation des aktuellen Projektstatus als auch die
 zur Auswertung verwendeten Skripte.
 
+![Ceilometer profile timeseries](/doc/figures/ceilometer.png')
+
 # Dokumentation
 * [Abstract (Draft)](doc/LEX2016_Wolkenhoehe.pdf)
 * [Präsentation des Projektes](doc/lex_presentation.pdf)
