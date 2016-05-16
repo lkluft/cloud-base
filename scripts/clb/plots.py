@@ -1,10 +1,15 @@
 # -*- coding: utf-8 -*-
-"""Basic template for a python script using numpy and matplotlib.
+"""Collection of function to plot basic atmospheric properties.
 """
 
-import numpy as np
-import matplotlib.pyplot as plt
 import matplotlib as mpl
+import matplotlib.pyplot as plt
+import numpy as np
+
+
+__all__ = ['plot_lwr',
+           'plot_ceilo',
+           ]
 
 
 def plot_lwr(date, lwr, **kwargs):
@@ -23,6 +28,7 @@ def plot_lwr(date, lwr, **kwargs):
 
 
 def plot_ceilo(date, z, back_scat):
+    """Create a basic timeseries plot of ceilometer scattering profiles."""
     fig, ax = plt.subplots(figsize=(20, 6.1))
     pcm = ax.pcolormesh(date, z, back_scat,
                         cmap=plt.get_cmap('Blues', lut=10),

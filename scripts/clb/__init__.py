@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
-"""Basic template for a python script using numpy and matplotlib.
+"""This package provides modules and functions to estimate the cloud base level
+by measuring the downward longwave radiation.
 """
 
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
 import scipy as sp
 import scipy.constants
 
 
 __all__ = ['create_dummy_data',
-           'find_value',
            'lwr_to_temperature',
+           'lapse_rate',
            'standard_atmosphere',
            ]
 
@@ -25,25 +26,30 @@ def create_dummy_data(LWR=350, N=500, noise=False):
     return lwr
 
 
-def find_value(z, data, T):
-    """Return height z[n] where data[n] is closest to T."""
-    return z[np.abs(data-T).argmin()]
-
-
 def lwr_to_temperature(lwr):
-    """Calculate the temperature corresponding to an LWR value."""
+    """Transform LWR radiances into brightness temperatures.
+
+    Parameters:
+        lwr (np.array): Measured LWR radiances.
+
+    Returns:
+        np.array: Brightness temperature in Kelvin."""
     return (lwr / sp.constants.Stefan_Boltzmann)**0.25
 
 
-def lapse_rate(T_s, lapse_rate, z):
-    """Temperatur decrease with a fixed lapse rate.
+def lapse_rate(T_s, z, lapse_rate=-0.0065):
+    """Generate a time series of temperature profiles.
+
+    This functions takes a time series of surface temperatures and returns an
+    first order temperature profile for each time step. For this purpose a
+    temperature lapse rate as well as height levels have to be specified.
 
     Parameters:
         T_s (np.array): Surface temperatures.
-        lapse_rate (float): Lapse rate.
         z (np.array): Height levels.
+        lapse_rate (float): Lapse rate.
 
-    Return:
+    Returns:
         np.array: Atmospheric temperature profile (T_s x z).
 
     """

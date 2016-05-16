@@ -15,22 +15,20 @@ def main(mfilename, cfilename):
     """Main function."""
     data = clb.csv.read_master(mfilename)
     date = clb.csv.read_mpl_date(mfilename)
-    ceilo = clb.csv.read_ceilo(cfilename)
+    back_scat, z = clb.csv.read_ceilo(cfilename)
     lwr = data['L']
     T_s = data['TT002']
 
-    h = np.linspace(0, 10000, 500)
-
     T_b = clb.lwr_to_temperature(lwr)
-    T_a = clb.lapse_rate(T_s, - 0.0065, h) + 273.15
+    T_a = clb.lapse_rate(T_s, z) + 273.15
 
-    tt_b, hh = np.meshgrid(T_b, h)
+    tt_b, zz = np.meshgrid(T_b, z)
 
     # TODO: Need to get indexing clear. Why does the diagonal() thing work?
-    cloud_height = hh[np.abs(tt_b - T_a).argmin(axis=0)].diagonal()
+    cloud_height = zz[np.abs(tt_b - T_a).argmin(axis=0)].diagonal()
 
     plt.style.use('typhon')
-    fig, ax = plots.plot_ceilo(date, ceilo['z'], ceilo['back_scat'])
+    fig, ax = plots.plot_ceilo(date, z, back_scat)
     ax.plot(date, cloud_height, color='orange', linewidth=2, label='Wolkenhöhe')
     ax.legend()
     fig.savefig(cfilename.replace('.txt', '.pdf'))
