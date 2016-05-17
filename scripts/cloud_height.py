@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 """Estimate the cloud basis height using measurements of longwave radtion.
 """
+import os
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -27,11 +28,28 @@ def main(mfilename, cfilename):
     # TODO: Need to get indexing clear. Why does the diagonal() thing work?
     cloud_height = zz[np.abs(tt_b - T_a).argmin(axis=0)].diagonal()
 
-    plt.style.use('typhon')
+    try:
+        plt.style.use('typhon')
+    except:
+        plt.style.use('seaborn-poster')
+
+    # LWR time series
+    fig, ax = plots.plot_lwr(date, lwr)
+    fig.savefig(os.path.join('plots', 'lwr.pdf'))
+
+    # brightness temperature time series
+    fig, ax = plots.plot_brightness_t(date, T_b)
+    fig.savefig(os.path.join('plots', 'brightness_temperature.pdf'))
+
+    # temperature profile
+    fig, ax = plots.plot_t_profile(date, z, np.ma.masked_invalid(T_a))
+    fig.savefig(os.path.join('plots', 't_profile.pdf'))
+
+    # back scattering and estimated CLB
     fig, ax = plots.plot_ceilo(date, z, back_scat)
     ax.plot(date, cloud_height, color='orange', linewidth=2, label='Wolkenhöhe')
     ax.legend()
-    fig.savefig(cfilename.replace('.txt', '.pdf'))
+    fig.savefig(os.path.join('plots', 'clb.pdf'))
 
 
 if __name__ == '__main__':
