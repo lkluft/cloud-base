@@ -1,0 +1,124 @@
+#DEFINITIONS:  -*-sh-*-
+#
+# Author: Lukas Kluft
+
+Arts2 {
+
+INCLUDE "general/general.arts"
+INCLUDE "general/continua.arts"
+INCLUDE "general/agendas.arts"
+INCLUDE "general/planet_earth.arts"
+
+# Agenda for scalar gas absorption calculation
+Copy(abs_xsec_agenda, abs_xsec_agenda__noCIA)
+
+# (standard) emission calculation
+Copy( iy_main_agenda, iy_main_agenda__Emission )
+
+# cosmic background radiation
+Copy( iy_space_agenda, iy_space_agenda__CosmicBackground )
+
+# standard surface agenda (i.e., make use of surface_rtprop_agenda)
+Copy( iy_surface_agenda, iy_surface_agenda__UseSurfaceRtprop )
+
+# on-the-fly absorption
+Copy( propmat_clearsky_agenda, propmat_clearsky_agenda__OnTheFly )
+
+# sensor-only path
+Copy( ppath_agenda, ppath_agenda__FollowSensorLosPath )
+
+# no refraction
+Copy( ppath_step_agenda, ppath_step_agenda__GeometricPath )
+
+
+# Number of Stokes components to be computed
+IndexSet( stokes_dim, 1 )
+
+# Clearsky = No scattering
+cloudboxOff
+
+# Absorption species
+abs_speciesSet( species=[ "H2O, H2O-SelfContCKDMT252, H2O-ForeignContCKDMT252",
+                          "O2, O2-CIAfunCKDMT100",
+                          "N2, N2-CIAfunCKDMT252, N2-CIArotCKDMT252",
+                          "O3",
+                          "CO2, CO2-CKDMT252"
+                        ])
+abs_lines_per_speciesSetEmpty
+
+#Define Line shape
+abs_lineshape_per_tgDefine( abs_lineshape, abs_species,
+        ["Voigt_Kuntz6", "Voigt_Kuntz6", "Voigt_Kuntz6",
+         "Voigt_Kuntz6", "Voigt_Kuntz6"],
+        ["VVH", "VVH", "VVH", "VVH", "VVH"],
+        [750e9, 750e9, 750e9, 750e9, 750e9] )
+
+# Read HITRAN catalog (needed for O3):
+abs_linesReadFromHitran(abs_lines,
+"/scratch/uni/u237/data/catalogue/hitran/hitran2012/HITRAN2012.par",
+                        1e12,
+                        70e12 )
+
+abs_lines_per_speciesCreateFromLines
+
+# A pressure grid rougly matching 0 to 12 km
+VectorNLogSpace( p_grid, 100, 1000e2, 200e2 )
+
+# Atmospheric scenario
+# AtmRawRead( basename="testdata/tropical" )
+AtmRawRead(basename="planets/Earth/Fascod/tropical/tropical")
+
+# Weakly reflecting surface
+VectorSetConstant( surface_scalar_reflectivity, 1, 0. )
+Copy( surface_rtprop_agenda,
+      surface_rtprop_agenda__Specular_NoPol_ReflFix_SurfTFromt_surface )
+
+
+# We select here to use Rayleigh-Jean brightness temperatures
+StringSet( iy_unit, "PlanckBT" )
+
+# Atmosphere and surface
+AtmosphereSet1D
+AtmFieldsCalc
+Extract( z_surface, z_field, 0 )
+Extract( t_surface, t_field, 0 )
+VectorCreate( dummy )
+VectorExtractFromMatrix( dummy, t_surface, 0, "row" )
+Extract(surface_skin_t, dummy, 0)
+
+# Perform RT calculations
+abs_xsec_agenda_checkedCalc
+propmat_clearsky_agenda_checkedCalc
+atmfields_checkedCalc
+atmgeom_checkedCalc
+cloudbox_checkedCalc
+
+# The below lines are important to select frequency range and resolution.
+# Grid spacing and FWHM of the Gaussian response should match!
+VectorLinSpace( f_grid, 3e12, 66e12, 100e9 )
+
+# Sensor off
+jacobianOff
+AntennaOff
+sensorOff
+
+# Opcacity
+ArrayOfStringSet( iy_aux_vars, ["Optical depth", "Absorption, summed"])
+
+# Sensor position
+VectorCreate( z0 )
+VectorExtractFromMatrix( z0, z_surface, 0, "row" )
+Copy( rte_pos, z0 )
+VectorSet( rte_los, [0] )
+VectorSet( rte_pos2, [] )
+
+# Starting the calculation
+iyCalc
+
+# Writing results
+WriteXML( "binary", f_grid, "f_grid.xml" )
+WriteXML( "binary", p_grid, "p_grid.xml" )
+WriteXML( "binary", iy, "iy.xml" )
+WriteXML( "binary", iy_aux, "iy_aux.xml" )
+WriteXML( "binary", z_field, "z_field.xml"  )
+}

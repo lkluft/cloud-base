@@ -1,0 +1,19 @@
+#!/bin/bash
+#SBATCH --job-name=pyrgeometer
+#SBATCH --output=pyrgeometer-%j.out
+#SBATCH --error=pyrgeometer-%j.err
+
+#SBATCH --account=uni
+#SBATCH --partition=uni-u237
+#SBATCH --nodes=1-1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=16
+
+RESULTS_DIR='results/'
+CONTROLF='pyrgeometer.arts'
+
+ARTS='/scratch/uni/u237/users/lkluft/arts/build/src/arts'
+ARTS_OPTIONS="-o ${RESULTS_DIR}"
+
+# actual ARTS run
+OMP_NUM_THREADS=16 ${ARTS} ${ARTS_OPTIONS} ${CONTROLF}
