@@ -14,19 +14,17 @@ import clb.plots as plots
 
 def main(mfilename, cfilename):
     """Main function."""
-    data = clb.csv.read_master(mfilename)
     date = clb.csv.read_mpl_date(mfilename)
-    back_scat, z = clb.csv.read_ceilo(cfilename)
+
+    data = clb.csv.read_master(mfilename)
     lwr = data['L']
-    T_s = data['TT002']
+    T_s = data['TT002'] + 273.15
 
-    T_b = clb.lwr_to_temperature(lwr)
-    T_a = clb.lapse_rate(T_s, z) + 273.15
+    back_scat, z = clb.csv.read_ceilo(cfilename)
 
-    tt_b, zz = np.meshgrid(T_b, z)
+    T_b = clb.lwr_to_T_b(lwr) - clb.lwr_to_T_b(clb.lwr_surrounding(T_s))
 
-    # TODO: Need to get indexing clear. Why does the diagonal() thing work?
-    cloud_height = zz[np.abs(tt_b - T_a).argmin(axis=0)].diagonal()
+    cloud_height = T_b / -0.0065
 
     try:
         plt.style.use('typhon')
@@ -34,23 +32,22 @@ def main(mfilename, cfilename):
         plt.style.use('seaborn-poster')
 
     # LWR time series
-    fig, ax = plots.plot_lwr(date, lwr)
-    fig.savefig(os.path.join('plots', 'lwr.pdf'))
+    fig1, ax = plots.plot_lwr(date, lwr)
 
     # brightness temperature time series
-    fig, ax = plots.plot_brightness_t(date, T_b)
-    fig.savefig(os.path.join('plots', 'brightness_temperature.pdf'))
-
-    # temperature profile
-    fig, ax = plots.plot_t_profile(date, z, np.ma.masked_invalid(T_a))
-    fig.savefig(os.path.join('plots', 't_profile.pdf'))
+    fig2, ax = plots.plot_brightness_t(date, T_b)
 
     # back scattering and estimated CLB
-    fig, ax = plots.plot_ceilo(date, z, back_scat)
-    ax.plot(date, cloud_height, color='orange', linewidth=2, label='Wolkenhöhe')
+    fig3, ax = plots.plot_ceilo(date, z, back_scat)
+    ax.plot(date, cloud_height,
+            color='orange',
+            linewidth=2,
+            label='Wolkenhöhe')
     ax.legend()
-    fig.savefig(os.path.join('plots', 'clb.pdf'))
 
+    fig1.savefig(os.path.join('plots', 'lwr.pdf'))
+    fig2.savefig(os.path.join('plots', 'brightness_temperature.pdf'))
+    fig3.savefig(os.path.join('plots', 'clb_improved.pdf'))
 
 if __name__ == '__main__':
-    main('data/MASTER.txt', 'data/CLB.txt')
+    main('data/MASTER2.txt', 'data/CLB2.txt')

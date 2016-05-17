@@ -1,17 +1,19 @@
 # -*- coding: utf-8 -*-
-"""This package provides modules and functions to estimate the cloud base level
-by measuring the downward longwave radiation.
+"""This package provides modules and functions to estimate the
+cloud level base (CLB) by measuring the downward longwave radiation.
+
 """
 
 import matplotlib.pyplot as plt
 import numpy as np
-import scipy as sp
-import scipy.constants
+from scipy.constants import c, h, k, Stefan_Boltzmann
 
 
 __all__ = ['create_dummy_data',
-           'lwr_to_temperature',
+           'integrate_planck',
            'lapse_rate',
+           'lwr_surrounding',
+           'lwr_to_T_b',
            'standard_atmosphere',
            ]
 
@@ -26,15 +28,21 @@ def create_dummy_data(LWR=350, N=500, noise=False):
     return lwr
 
 
-def lwr_to_temperature(lwr):
-    """Transform LWR radiances into brightness temperatures.
+def integrate_planck(f, T):
+    """Integrate the Planck function over the whole hemisphere.
 
     Parameters:
-        lwr (np.array): Measured LWR radiances.
+        f (np.array): Frequency grid.
+        T (np.array): Temperature grid.
 
     Returns:
-        np.array: Brightness temperature in Kelvin."""
-    return (lwr / sp.constants.Stefan_Boltzmann)**0.25
+        np.array: Integrated radiances (f x T).
+
+    """
+    ff, TT = np.meshgrid(f, T)
+    B = 2 * h * ff**3 / c**2 * (np.exp(h*ff/k/TT) -1)**-1
+
+    return np.pi * np.sum(B * (f[1]-f[0]), axis=1)
 
 
 def lapse_rate(T_s, z, lapse_rate=-0.0065):
@@ -55,6 +63,36 @@ def lapse_rate(T_s, z, lapse_rate=-0.0065):
     """
     tt, zz = np.meshgrid(T_s, z)
     return tt + lapse_rate * zz
+
+
+def lwr_to_T_b(lwr):
+    """Transform LWR radiances into brightness temperatures.
+
+    Parameters:
+        lwr (np.array): Measured LWR radiances.
+
+    Returns:
+        np.array: Brightness temperature in Kelvin."""
+
+    return (lwr / Stefan_Boltzmann)**0.25
+
+
+def lwr_surrounding(T):
+    """Calculate the integrated radiances for a pyrgeoemter.
+
+    A pyrgeoemter measures the atmospheric infra-red radiation spectrum.
+    We assume that it is sensitive to frequencies between 3 THz and 60 THz.
+
+    Parameters:
+        T (np.array): Near surface temperature.
+
+    Returns:
+        np.array: Integrated radiances for a simplified pyrgeoemter.
+
+        """
+    f = np.linspace(3e12, 60e12, 1000)
+
+    return integrate_planck(f, T)
 
 
 def standard_atmosphere(z=np.linspace(0, 86000, 100), T_s=19., unit='K'):
