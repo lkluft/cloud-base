@@ -44,7 +44,7 @@ def plot_brightness_t(date, T_b, **kwargs):
     ylabel = 'Helligkeitstemperatur [K]'
     color = 'DarkRed'
 
-    fig, ax = plot_time_series(date, T_b, xlabel, ylabel, color=color)
+    fig, ax = plot_time_series(date, T_b, xlabel, ylabel, color=color, **kwargs)
 
     return fig, ax
 
