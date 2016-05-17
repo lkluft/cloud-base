@@ -8,7 +8,9 @@ import numpy as np
 import typhon.cm
 
 
-__all__ = ['plot_lwr',
+__all__ = ['plot_time_series',
+           'plot_lwr',
+           'plot_t_profile',
            'plot_ceilo',
            ]
 
@@ -78,8 +80,6 @@ def plot_t_profile(date, z, T):
     fig, ax = plt.subplots(figsize=(20, 6.1))
     pcm = ax.pcolormesh(date, z, T,
                         cmap=plt.get_cmap('temperature', lut=10),
-                        # vmin=0,
-                        # vmax=1921,
                         rasterized=True)
     ax.set_ylabel('Höhe [m]')
     ax.set_ylim(0, 8000)
