@@ -3658,7 +3658,7 @@ between column types.}%
 
 % V1.7 Computer Society "diamond line" which follows index terms for nonconference papers
 \def\@IEEEcompsocdiamondline{%
-\put(0,0){\includegraphics[height=0.15cm, width=18.1cm]{Logos/Line.png}}
+\put(0,0){\includegraphics[height=0.15cm, width=18.1cm]{figures/Line.png}}
 %\raisebox{-3.5pt}{\fontfamily{pzd}\fontencoding{U}\fontseries{m}\fontshape{n}\fontsize{11}{12}\selectfont\char70}%
 }
 

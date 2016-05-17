@@ -9,4 +9,4 @@ zur Auswertung verwendeten Skripte.
 
 # Dokumentation
 * [Abstract (Draft)](doc/LEX2016_Wolkenhoehe.pdf)
-* [Präsentation des Projektes](doc/lex_presentation.pdf)
+* [Präsentation des Projektes](doc/LEX2016_Wolkenhoehe_Praesentation.pdf)
