@@ -86,48 +86,57 @@ Meteorologisches Institut - CEN, Universit"at Hamburg\hfill}}
 
 \IEEEtitleabstractindextext{%
 \begin{abstract}
-foo bar
+Pyrgeometer messen die aus dem Halbraum eintreffende atmosphärische
+Gegenstrahlung (5-50\,$\mu$m). Die Stärke der Gegenstrahlung hängt vom
+Zustand der Atmosphäre ab; bei Bewölkung ist diese deutlich stärker als bei
+wolkenfreien Verhältnissen. Zusätzlich hängt die Emission von der Temperatur
+ab; warme Körper strahlen stärker als kalte. Diese beiden Effekte ermöglichen 
+es über die atmosphärische Gegenstrahlung Rückschlüsse auf die Temperatur der
+Wolkenunterkante zu ziehen. Mit Hilfe zusätzlicher Annahmen über das
+Temperaturprofil kann so die Höhe der Wolkenunterkante abgeschätzt werden.
 \end{abstract}%
 }
 
-% make the title area
 \maketitle
 
-\IEEEfirstsection{%
-    \section{Hintergrund}\label{sec:hintergrund}}
-Pyrgeometer messen die aus dem Halbraum eintreffende atmosphärische
-Gegenstrahlung (5-50\,$\mu$m).  Die Stärke der Gegenstrahlung hängt vom
-Zustand der Atmosphäre ab; bei Bewölkung ist diese deutlich stärker als bei
-wolkenfreien Verhältnissen.  Zusätzlich hängt die Emission von der Temperatur
-ab; warme Körper strahlen stärker als kalte.  Diese beiden Effekte ermöglichen 
-es über die atmosphärische Gegenstrahlung Rückschlüsse auf die Temperatur der
-Wolkenunterkante zu ziehen.  Mit Hilfe zusätzlicher Annahmen über das
-Temperaturprofil kann so die Höhe der Wolke abgeschätzt werden.
+\IEEEfirstsection{\section{Grundlagen}\label{sec:grundlagen}}
 
-\section{Konzept}\label{sec:konzept}
-\begin{enumerate}
-  \item Berechnung der Wolkentemperatur aus den Strahlungsmessungen des Pyrgeometers.\\
-  Die gemessene Leistung der atmosphärischen Gegenstrahlung lässt sich mit Hilfe des
-  Stefan-Boltzmann-Gesetzes in eine Temperatur umrechnen.  
-  \[ E = \sigma T^4 \]
 
-  \item Zuordnung der Wolkentemperatur zu einer Höhe.\\
-  Um aus der Temperatur der Wolke eine Abschätzung ihrer Höhe zu gewinnen,
-  müssen Informationen über das Temperaturprofil der Atmosphäre vorliegen.
-  Hierzu können Ansätze unterschiedlicher Komplexität gewählt werden:
-  \begin{itemize}
-    \item adiabatische Abnahme der Temperatur ausgehende von der Bodentemperatur
-    \item Standardatmosphäre mit angepasster Bodentemperatur
-    \item Radiosondenaufstiege
-  \end{itemize}
-\end{enumerate}
+\section{Strahlungstransfer}\label{sec:strahlungstransfer}
+Pyrgeometer messen den gesamten Strahlungsfluss im langwelligen
+Frequenzspektrum zwischen 3\,THz und 60\,THz. Um genauere Informationen darüber
+zu gewinnen, aus welchen Teilen der Atmosphäre die gemessene Strahlung stammt,
+wurden Strahlungstransferrechnungen durchgeführt.
 
-\section{Mögliche Probleme}\label{sec:probleme}
-Zusätzlich zu den genannten Herausforderungen können weitere Probleme den
-Erfolg des Experimentes beeinflussen:
-\begin{itemize}
-  \item Abhängigkeit der atmosphärischen Gegenstrahlung vom Bedeckungsgrad.
-  \item Abweichungen der Messungen durch variable Wasserdampfabsorption.
-\end{itemize}
+Für die Berechnung wurde der Atmospheric Radiative Transfer Simulator (ARTS)
+verwendet \cite{Eriksson2011}. ARTS ist ein physikalisches
+Strahlungstransfermodell für den Millimeter- und Submillimeterbereich des
+elektromagnetischen Strahlungsspektrums.
+
+
+\section{Messungen}\label{sec:messungen}
+
+\subsection{Pyrgeoemter}\label{subsec:pyrgeometer}
+
+% TODO: find out which thermometer is used.
+\subsection{Thermometer}\label{subsecthermometer}
+
+\subsection{Ceilometer}\label{subsec:ceilomter}
+
+
+\section{Ergebnisse}\label{sec:ergebnisse}
+% \begin{figure}[ht]
+%     \centering
+%     \includegraphics[width=0.48\textwidth]{figures/ceilometer.png}
+%     \caption{Zeitreihe der Rückstreuintensität sowie der ermittelten Wolkenhöhe.}
+%     \label{fig:back_scat}
+% \end{figure}
+
+
+\section{Schlussfolgerungen}\label{sec:schlussfolgerungen}
+
+% bibliography
+\bibliographystyle{IEEEtranS}
+\bibliography{references}
 
 \end{document}
