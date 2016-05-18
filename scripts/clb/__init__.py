@@ -8,8 +8,13 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy.constants import c, h, k, Stefan_Boltzmann
 
+from . import csv
+from . import plots
 
-__all__ = ['create_dummy_data',
+
+__all__ = ['csv',
+           'plots',
+           'create_dummy_data',
            'integrate_planck',
            'lapse_rate',
            'lwr_surrounding',

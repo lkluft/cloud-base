@@ -6,13 +6,13 @@ from matplotlib.dates import strpdate2num
 import numpy as np
 
 
-__all__ = ['read_ceilo',
+__all__ = ['read_scat',
            'read_mpl_date',
            'read_master',
            ]
 
 
-def read_ceilo(filename):
+def read_scat(filename):
     """Read CLB.txt CSV files.
 
     Parameters:
@@ -25,8 +25,9 @@ def read_ceilo(filename):
     z = np.arange(10, 10001, 10)
 
     with open(filename, 'rb') as f:
-        tmp = np.genfromtxt(f, delimiter=';', skip_header=7)
-        back_scat = np.ma.masked_invalid(tmp[:, 6:]).T
+        tmp = np.genfromtxt(f, delimiter=';', skip_header=7,
+                usecols=tuple(range(6, 1006)))
+        back_scat = np.ma.masked_invalid(tmp).T
         back_scat = np.ma.masked_less(back_scat, 0)
 
     return back_scat, z

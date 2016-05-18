@@ -10,7 +10,7 @@ import typhon.cm
 
 __all__ = ['plot_time_series',
            'plot_lwr',
-           'plot_t_profile',
+           'plot_brightness_t',
            'plot_ceilo',
            ]
 
@@ -43,7 +43,7 @@ def plot_lwr(date, lwr, **kwargs):
 def plot_brightness_t(date, T_b, **kwargs):
     """Plot brightness temperature time series."""
     xlabel = 'Datum'
-    ylabel = 'Helligkeitstemperatur [K]'
+    ylabel = r'$\Delta T_B$ [K]'
     color = 'DarkRed'
 
     fig, ax = plot_time_series(date, T_b,
@@ -62,35 +62,15 @@ def plot_ceilo(date, z, back_scat):
                         rasterized=True)
     ax.set_ylabel('Höhe [m]')
     ax.set_ylim(0, 8000)
-    ax.set_yticks(np.arange(0, 8001, 500))
+    ax.set_yticks(np.arange(0, 8001, 1000))
+    ax.set_yticks(np.arange(0, 8001, 500), minor=True)
     ax.set_xlabel('Datum')
     ax.set_xlim(date.min(), date.max())
     formatter = mpl.dates.DateFormatter('%d.%m.')
     ax.xaxis.set_major_formatter(formatter)
     ax.set_xticks(np.arange(np.floor(date.min()), np.ceil(date.max())))
-    ax.grid('on')
+    ax.grid('on', which='both', linestyle='-')
     cb = fig.colorbar(pcm)
     cb.set_label('Rückstreuintensität')
-
-    return fig, ax
-
-
-def plot_t_profile(date, z, T):
-    """Create a basic timeseries plot of ceilometer scattering profiles."""
-    fig, ax = plt.subplots(figsize=(20, 6.1))
-    pcm = ax.pcolormesh(date, z, T,
-                        cmap=plt.get_cmap('temperature', lut=10),
-                        rasterized=True)
-    ax.set_ylabel('Höhe [m]')
-    ax.set_ylim(0, 8000)
-    ax.set_yticks(np.arange(0, 8001, 500))
-    ax.set_xlabel('Datum')
-    ax.set_xlim(date.min(), date.max())
-    formatter = mpl.dates.DateFormatter('%d.%m.')
-    ax.xaxis.set_major_formatter(formatter)
-    ax.set_xticks(np.arange(np.floor(date.min()), np.ceil(date.max())))
-    ax.grid('on')
-    cb = fig.colorbar(pcm)
-    cb.set_label('Temperatur [K]')
 
     return fig, ax
