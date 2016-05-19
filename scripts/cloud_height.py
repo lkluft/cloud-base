@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """Estimate the cloud base height using measurements
-of longwave radtion and 2m temperature.
+of longwave radiation and 2m temperature.
 """
 import os
 
@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 
 import clb
 from clb import csv
-from clb import  plots
+from clb import plots
 
 
 def main(mfilename, cfilename):
@@ -41,14 +41,20 @@ def main(mfilename, cfilename):
     fig2, ax2 = plt.subplots(figsize=(20, 6))
     plots.plot_T_b(date, T_b, ax=ax2)
 
-    # back scattering and estimated CLB
+    # back scattering
     fig3, ax3 = plt.subplots(figsize=(20, 6))
     plots.plot_ceilo(date, z, back_scat, ax=ax3)
-    ax3.plot(date, cloud_height,
+    ax3.plot(date, cloud_height,  # estimated cloud height
              color='darkorange',
              alpha=0.7,
              linewidth=2,
              label='Wolkenhöhe')
+    ax3.plot(date, 2300 * np.ones(date.size),  # maximal detection height
+             color='darkred',
+             alpha=0.7,
+             linewidth=2,
+             linestyle='--',
+             label='Max. Detektionshöhe')
     ax3.legend()
 
     fig1.savefig(os.path.join('plots', 'lwr.pdf'))

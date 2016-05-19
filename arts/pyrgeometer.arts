@@ -75,7 +75,7 @@ Copy( surface_rtprop_agenda,
 
 
 # We select here to use Rayleigh-Jean brightness temperatures
-StringSet( iy_unit, "PlanckBT" )
+StringSet( iy_unit, "1" )
 
 # Atmosphere and surface
 AtmosphereSet1D
@@ -121,4 +121,5 @@ WriteXML( "binary", p_grid, "p_grid.xml" )
 WriteXML( "binary", iy, "iy.xml" )
 WriteXML( "binary", iy_aux, "iy_aux.xml" )
 WriteXML( "binary", z_field, "z_field.xml"  )
+WriteXML( "binary", t_field, "t_field.xml"  )
 }
