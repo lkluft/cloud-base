@@ -10,8 +10,6 @@ import matplotlib
 import matplotlib.pyplot as plt
 
 import clb
-from clb import csv
-from clb import plots
 
 
 def main(mfilename, cfilename):
@@ -33,16 +31,16 @@ def main(mfilename, cfilename):
 
     # LWR time series
     fig1, ax1 = plt.subplots(figsize=(20, 6))
-    plots.plot_lwr(date, lwr, ax=ax1)
+    clb.plots.plot_lwr(date, lwr, ax=ax1)
 
     # brightness temperature time series
     fig2, ax2 = plt.subplots(figsize=(20, 6))
     dT_b = clb.lwr_to_T_b(lwr) - clb.lwr_to_T_b(clb.lwr_surrounding(T_s))
-    plots.plot_T_b(date, dT_b, ax=ax2)
+    clb.plots.plot_T_b(date, dT_b, ax=ax2)
 
     # back scattering
     fig3, ax3 = plt.subplots(figsize=(20, 6))
-    plots.plot_ceilo(date, z, back_scat, ax=ax3)
+    clb.plots.plot_ceilo(date, z, back_scat, ax=ax3)
     ax3.plot(date, cloud_height,  # estimated cloud height
              color='darkorange',
              alpha=0.7,
