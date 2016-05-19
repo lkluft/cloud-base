@@ -6,6 +6,7 @@ of longwave radtion and 2m temperature.
 import os
 
 import numpy as np
+import matplotlib
 import matplotlib.pyplot as plt
 
 import clb
@@ -33,22 +34,25 @@ def main(mfilename, cfilename):
         plt.style.use('seaborn-poster')
 
     # LWR time series
-    fig1, ax = plots.plot_lwr(date, lwr)
+    fig1, ax1 = plt.subplots(figsize=(20, 6))
+    plots.plot_lwr(date, lwr, ax=ax1)
 
     # brightness temperature time series
-    fig2, ax = plots.plot_brightness_t(date, T_b)
+    fig2, ax2 = plt.subplots(figsize=(20, 6))
+    plots.plot_T_b(date, T_b, ax=ax2)
 
     # back scattering and estimated CLB
-    fig3, ax = plots.plot_ceilo(date, z, back_scat)
-    ax.plot(date, cloud_height,
-            color='orange',
-            alpha=0.7,
-            linewidth=2,
-            label='Wolkenhöhe')
-    ax.legend()
+    fig3, ax3 = plt.subplots(figsize=(20, 6))
+    plots.plot_ceilo(date, z, back_scat, ax=ax3)
+    ax3.plot(date, cloud_height,
+             color='darkorange',
+             alpha=0.7,
+             linewidth=2,
+             label='Wolkenhöhe')
+    ax3.legend()
 
     fig1.savefig(os.path.join('plots', 'lwr.pdf'))
-    fig2.savefig(os.path.join('plots', 'brightness_temperature.pdf'))
+    fig2.savefig(os.path.join('plots', 't_b.pdf'))
     fig3.savefig(os.path.join('plots', 'clb.pdf'))
 
 if __name__ == '__main__':

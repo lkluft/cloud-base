@@ -39,7 +39,7 @@ fig2, ax = plt.subplots()
 pcm = ax.pcolormesh(f, z_mean, transmission,
                     vmin=0,
                     vmax=1,
-                    cmap='density',
+                    cmap=plt.get_cmap('density', lut=10),
                     rasterized=True)
 ax.set_xlim(f.min(), f.max())
 ax.set_xlabel('Frequenz [THz]')
