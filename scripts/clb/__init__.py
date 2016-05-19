@@ -15,6 +15,7 @@ from . import plots
 __all__ = ['csv',
            'plots',
            'create_dummy_data',
+           'estimate_cloud_height',
            'integrate_planck',
            'lapse_rate',
            'lwr_surrounding',
@@ -31,6 +32,21 @@ def create_dummy_data(LWR=350, N=500, noise=False):
         lwr += np.random.randn(N)
 
     return lwr
+
+
+def estimate_cloud_height(lwr, T_s, lapse_rate=-0.0065):
+    """Estimate the cloud base height from LWR and 2m temperature.
+
+    Parameters:
+        lwr (np.array): LWR.
+        T_s (np.array): Near-surface temperature.
+        lapse_rate (float): Vertical temperature gradient.
+
+    Returns:
+        np.array: Estimated cloud base height.
+    """
+
+    return (lwr_to_T_b(lwr) - lwr_to_T_b(lwr_surrounding(T_s))) / lapse_rate
 
 
 def integrate_planck(f, T):

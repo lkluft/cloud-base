@@ -24,9 +24,7 @@ def main(mfilename, cfilename):
 
     back_scat, z = clb.csv.read_scat(cfilename)
 
-    T_b = clb.lwr_to_T_b(lwr) - clb.lwr_to_T_b(clb.lwr_surrounding(T_s))
-
-    cloud_height = T_b / -0.0065
+    cloud_height = clb.estimate_cloud_height(lwr, T_s)
 
     try:
         plt.style.use('typhon')
@@ -39,7 +37,8 @@ def main(mfilename, cfilename):
 
     # brightness temperature time series
     fig2, ax2 = plt.subplots(figsize=(20, 6))
-    plots.plot_T_b(date, T_b, ax=ax2)
+    dT_b = clb.lwr_to_T_b(lwr) - clb.lwr_to_T_b(clb.lwr_surrounding(T_s))
+    plots.plot_T_b(date, dT_b, ax=ax2)
 
     # back scattering
     fig3, ax3 = plt.subplots(figsize=(20, 6))

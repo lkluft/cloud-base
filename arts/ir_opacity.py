@@ -9,15 +9,29 @@ import matplotlib.pyplot as plt
 import typhon.cm
 from typhon.arts import xml
 
+import clb
 
-f = xml.load('results/f_grid.xml')/1e12
+
+f = xml.load('results/f_grid.xml')
 z = xml.load('results/z_field.xml').flatten()
+t = xml.load('results/t_field.xml').flatten()
 iy = xml.load('results/iy.xml')
 iy_aux = xml.load('results/iy_aux.xml')
 
 opacity = iy_aux[0].flatten()
 abs_sum = iy_aux[1][:, 0, 0, :].T
 
+## Calculations
+# maximal detection height based on clear-sky ARTS run.
+lwr = np.pi * np.sum(iy * (f[1] - f[0]))
+T_s = t[0]
+
+max_height = float(clb.estimate_cloud_height(lwr, T_s))
+print('Maximal detection height: {:.0f}m'.format(max_height))
+
+
+## Plots
+f *= 1e-12  #convert to THz
 plt.style.use('typhon')
 
 # overall opacity
