@@ -20,6 +20,7 @@ __all__ = ['csv',
            'lapse_rate',
            'lwr_surrounding',
            'lwr_to_T_b',
+           'planck',
            'standard_atmosphere',
            ]
 
@@ -49,6 +50,20 @@ def estimate_cloud_height(lwr, T_s, lapse_rate=-0.0065):
     return (lwr_to_T_b(lwr) - lwr_to_T_b(lwr_surrounding(T_s))) / lapse_rate
 
 
+def planck(f, T):
+    """Planck spectrum for temperature T.
+
+    Parameters:
+        f (np.array): Frquencies.
+        T (float): Temperature.
+
+    Returns:
+        np.array: Radiances.
+
+    """
+    return 2 * h * f**3 / c**2 * (np.exp(h*f/k/T) -1)**-1
+
+
 def integrate_planck(f, T):
     """Integrate the Planck function over the whole hemisphere.
 
@@ -61,9 +76,29 @@ def integrate_planck(f, T):
 
     """
     ff, TT = np.meshgrid(f, T)
-    B = 2 * h * ff**3 / c**2 * (np.exp(h*ff/k/TT) -1)**-1
+    B = planck(ff, TT)
 
+    # TODO: Use integrate_spectrum in the future.
     return np.pi * np.sum(B * (f[1]-f[0]), axis=1)
+
+
+def integrate_spectrum(f, B, factor=np.pi):
+    """Integrate a radiance spectrum.
+
+    Parameters:
+        f (np.array): Frequencies.
+        B (np.array): Radiances.
+        factor (float): Integration faktor.
+            Default pi for integration over full halfroom.
+
+    Returns:
+        float: Power [W * m**-2].
+
+    """
+    B_mean = (B[1:] + B[:-1]) / 2
+    df = np.diff(f)
+
+    return factor * np.sum(B_mean * df)
 
 
 def lapse_rate(T_s, z, lapse_rate=-0.0065):
