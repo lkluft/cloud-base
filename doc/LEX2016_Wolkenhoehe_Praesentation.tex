@@ -57,9 +57,10 @@
 \begin{column}{0.6\textwidth}
 \begin{itemize}
   \vfill\item Bewölkung erhöht die langwellige Einstrahlung
-  \vfill\item Die Strahlungsintensität hängt von der Temperatur des emittierenden Körpers ab \[ I \propto T\]
-  \vfill\item Strahlungsmessungen enthalten Informationen über die Wolkentemperatur
-              und ermöglichen so Rückschlüsse auf die Wolkenhöhe
+  \vfill\item Die Strahlungsintensität hängt von der Temperatur des
+      emittierenden Körpers ab \[ I \propto T\]
+  \vfill\item Strahlungsmessungen enthalten Informationen über die
+      Wolkentemperatur und ermöglichen so Rückschlüsse auf die Wolkenhöhe
   \vfill
 \end{itemize}
 \end{column}
@@ -75,6 +76,7 @@
 \end{columns}
 \end{frame}
 
+
 \section{Pyrgeometer}
 \begin{frame}{Pyrgeometer}
 \begin{columns}
@@ -82,8 +84,10 @@
 \begin{itemize}
   \vfill\item Messung der atmosphärischen Gegenstrahlung $L\downarrow$\\
               (5 bis 50\,$\mu$m)
-  \vfill\item Schwarze Sensoroberfläche mit Abschirmung der kurzwelligen Einstrahlung
-  \vfill\item Langwellige Nettostrahlung wird durch Wärmeleitung in einer Thermosäule ausgeglichen
+  \vfill\item Schwarze Sensoroberfläche mit Abschirmung der kurzwelligen
+      Einstrahlung
+  \vfill\item Langwellige Nettostrahlung wird durch Wärmeleitung in einer
+      Thermosäule ausgeglichen
 \vfill
 \end{itemize}
 \end{column}
@@ -103,14 +107,12 @@
 \end{alertblock}
 \end{frame}
 
+
 \section{Konzept}
 \begin{frame}{Konzept}
 \begin{itemize}
-  \vfill\item Berechnung der Wolkentemperatur aus den Strahlungsmessungen des Pyrgeometers
-    \begin{itemize}
-      \item Stefan-Boltzmann-Gesetz $E = \sigma T^4$
-      \item Eventuelle Berücksichtigung des Bedeckungsgrades
-    \end{itemize}
+  \vfill\item Berechnung der Wolkentemperatur aus den Strahlungsmessungen des
+      Pyrgeometers
   \vfill\item Zuordnung der Wolkentemperatur zu einer Höhe
   \begin{itemize}
     \item adiabatische Abnahme der Temperatur ausgehend\\
@@ -118,6 +120,94 @@
     \item Standardatmosphäre mit angepasster $T_s$
     \item Radiosondenaufstieg
   \end{itemize}
+  \vfill
+\end{itemize}
+\end{frame}
+
+
+\section{Strah\-lungs\-trans\-fer}
+\begin{frame}{Opazität}
+\begin{columns}
+\begin{column}{0.45\textwidth}
+\begin{itemize}
+  \vfill\item Großteil der gemessenen Strahlung entstammt der bodennahen Atmosphäre
+  \vfill\item Optisches Fenster zwischen 20-40\,THz erlaubt Blick in höhere
+      Atmosphärenschichten
+  \vfill
+\end{itemize}
+\end{column}
+
+\begin{column}{0.55\textwidth}
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1\textwidth]{figures/opacity.pdf}
+    \caption{Opazität in Abhängigkeit von Frequenz und Höhe.}
+    \label{fig:opacity}
+\end{figure}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Radianzspektrum}
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/spectrum.pdf}
+    \caption{Radianz in Abhängigkeit der Frequenz.}
+    \label{fig:spectrum}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Abschätzung der CLB}
+\begin{itemize}
+  \vfill\item Differenz der gemessenen LWR und der LWR der bodennahen
+      Atmosphäre ist die entscheidende Größe
+      \[ \Delta LWR = LWR - \int B_\nu(\nu, T_s) \partial\nu \]
+  \vfill\item Die Differenz der Helligkeitstemperaturen gibt anschaulich an,
+      wie viel Kelvin das optische Fenster kälter ist als die Temperatur am
+      Boden
+  \vfill\item Umrechnung in eine Höhe mittels Temperaturgradienten $\gamma$
+      \[ CLB_{est} = \frac{\Delta T_{LWR}}{\gamma} \]
+  \vfill
+\end{itemize}
+\end{frame}
+
+
+\section{Ergebnisse}
+\begin{frame}{Ergebnisse}
+\begin{itemize}
+  \item $CLB_{est}$ im wolkenfreien Fall gibt eine Abschätzung der maximalen
+      Detektionshöhe
+\end{itemize}
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1\textwidth]{figures/ceilometer.png}
+    \caption{Zeitreihe der berechneten Wolkenhöhe sowie der Ceilometer-Rückstreuung.}
+    \label{fig:clb}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Fazit}
+\begin{itemize}
+  \vfill\item Messungen der langwelligen Gegenstrahlung und der bodennahen
+      Temperatur (2\,m) ermöglichen eine Abschätzung der Höhe tiefer Bewölkung
+  \vfill\item Die maximale Detektionshöhe hängt stark vom Atmosphärenzustand ab
+      und liegt zwischen 2300 und 3500\,m
+  \vfill\item Variabilität des vertikalen Temperaturgradienten kann die
+      Ergebnisse verschlechtern 
+\vfill
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Ausblick}
+\begin{itemize}
+  \vfill\item Verbesserung des vertikalen Temperaturgradienten über
+      Einbeziehung der Bodenfeuchte
+  \vfill\item Einschränkung des Pyrgeometer-Blickwinkels (Metallrohr) zur
+      besseren Vergleichbarkeit mit Ceilometermessungen
+  \vfill\item Wolkenfreie Messungen bieten Informationen über den
+      Wasserdampfgehalt der Atmosphäre. Eine Regression von
+        Strahlungstransfersimulationen verschiedener Atmosphären bietet die
+        Möglichkeit einer Abschätzung der Wasserdampfsäule
   \vfill
 \end{itemize}
 \end{frame}
