@@ -30,7 +30,6 @@ def plot_time_series(date, data, ylabel, ax=None, **kwargs):
     Parameters:
         date (np.array): Dates in matplotlib format.
         data (np.array): Data array.
-        xlabel (str): x label.
         ylabel (str): y label.
         ax (AxesSubplot): Matplotlib axes.
 
