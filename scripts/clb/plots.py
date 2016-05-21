@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Collection of function to plot basic atmospheric properties.
+"""Collection of functions to plot basic atmospheric properties.
 """
 
 import matplotlib as mpl
@@ -8,14 +8,23 @@ import numpy as np
 import typhon.cm
 
 
-__all__ = ['plot_time_series',
+__all__ = ['set_date_axis',
+           'plot_time_series',
+           'plot_clb',
            'plot_lwr',
            'plot_T_b',
-           'plot_ceilo',
+           'plot_back_scat',
            ]
 
 
-def plot_time_series(date, data, xlabel, ylabel, ax=None, **kwargs):
+def set_date_axis(ax=None, dateformat='%d.%m.'):
+    """Set DateFormatter for given AxesSubplot."""
+    formatter = mpl.dates.DateFormatter(dateformat)
+    ax.xaxis.set_major_formatter(formatter)
+    ax.grid('on', which='both', linestyle='-')
+
+
+def plot_time_series(date, data, ylabel, ax=None, **kwargs):
     """Create a basic timeseries plot.
 
     Parameters:
@@ -33,13 +42,48 @@ def plot_time_series(date, data, xlabel, ylabel, ax=None, **kwargs):
         ax = plt.gca()
 
     line, = ax.plot(date, data, **kwargs)
-    formatter = mpl.dates.DateFormatter('%d.%m.')
-    ax.xaxis.set_major_formatter(formatter)
+
+    set_date_axis(ax)
+
     ax.set_xlim(date.min(), date.max())
     ax.set_xticks(np.arange(np.floor(date.min()), np.ceil(date.max())))
-    ax.set_xlabel(xlabel)
+    ax.set_xlabel('Datum')
     ax.set_ylabel(ylabel)
-    ax.grid('on')
+
+    return line
+
+
+def plot_clb(date, clb, detection_height=2300, ax=None, **kwargs):
+    """Plot cloud base height time series.
+
+    Parameters:
+        date (np.array): Dates in matplotlib format.
+        clb (np.array): Cloud base height.
+        detection_height (float): Maximal detection height.
+        ax (AxesSubplot): Matplotlib axes.
+
+    """
+    ylabel = 'Höhe [m]'
+
+    line = plot_time_series(date, clb,
+                            ax=ax,
+                            ylabel=ylabel,
+                            color='darkorange',
+                            alpha=0.7,
+                            linewidth=2,
+                            label='Wolkenhöhe',
+                            **kwargs)
+
+    plot_time_series(date, detection_height * np.ones(date.size),
+                     ax=ax,
+                     ylabel=ylabel,
+                     color='darkred',
+                     alpha=0.7,
+                     linewidth=2,
+                     linestyle='--',
+                     label='Max. Detektionshöhe')
+
+    ax.legend()
 
     return line
 
@@ -56,10 +100,9 @@ def plot_lwr(date, lwr, ax=None, **kwargs):
         Line2D: A line.
 
     """
-    xlabel = 'Datum'
     ylabel = r'Langwellige Rückstrahlung [$W\,m^{-2}$]'
 
-    line = plot_time_series(date, lwr, xlabel, ylabel, ax=ax, **kwargs)
+    line = plot_time_series(date, lwr, ylabel, ax=ax, **kwargs)
 
     return line
 
@@ -76,17 +119,15 @@ def plot_T_b(date, T_b, ax=None, **kwargs):
         Line2D: A line.
 
     """
-    xlabel = 'Datum'
     ylabel = r'$\Delta T_B$ [K]'
     color = 'DarkRed'
 
-    line = plot_time_series(date, T_b, xlabel, ylabel, ax=ax, color=color,
-            **kwargs)
+    line = plot_time_series(date, T_b, ylabel, ax=ax, color=color, **kwargs)
 
     return line
 
 
-def plot_ceilo(date, z, back_scat, ax=None):
+def plot_back_scat(date, z, back_scat, ax=None):
     """Create a basic timeseries plot of ceilometer scattering profiles.
 
     Parameters:
@@ -101,22 +142,20 @@ def plot_ceilo(date, z, back_scat, ax=None):
     """
     if ax is None:
         ax = plt.gca()
+
     pcm = ax.pcolormesh(date, z, back_scat,
                         cmap=plt.get_cmap('density', lut=10),
                         vmin=0,
                         vmax=1921,
                         rasterized=True)
-    ax.set_ylabel('Höhe [m]')
+
     ax.set_ylim(0, 4000)
     ax.set_yticks(np.arange(0, 4001, 1000))
     ax.set_yticks(np.arange(0, 4001, 500), minor=True)
-    ax.set_xlabel('Datum')
-    ax.set_xlim(date.min(), date.max())
-    formatter = mpl.dates.DateFormatter('%d.%m.')
-    ax.xaxis.set_major_formatter(formatter)
-    ax.set_xticks(np.arange(np.floor(date.min()), np.ceil(date.max())))
-    ax.grid('on', which='both', linestyle='-')
+    set_date_axis(ax)
+
     cb = ax.get_figure().colorbar(pcm)
     cb.set_label('Rückstreuintensität')
 
     return pcm, cb
+

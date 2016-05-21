@@ -38,21 +38,10 @@ def main(mfilename, cfilename):
     dT_b = clb.lwr_to_T_b(lwr) - clb.lwr_to_T_b(clb.lwr_surrounding(T_s))
     clb.plots.plot_T_b(date, dT_b, ax=ax2)
 
-    # back scattering
+    # back scattering and CLB
     fig3, ax3 = plt.subplots(figsize=(20, 6))
-    clb.plots.plot_ceilo(date, z, back_scat, ax=ax3)
-    ax3.plot(date, cloud_height,  # estimated cloud height
-             color='darkorange',
-             alpha=0.7,
-             linewidth=2,
-             label='Wolkenhöhe')
-    ax3.plot(date, 2300 * np.ones(date.size),  # maximal detection height
-             color='darkred',
-             alpha=0.7,
-             linewidth=2,
-             linestyle='--',
-             label='Max. Detektionshöhe')
-    ax3.legend()
+    clb.plots.plot_back_scat(date, z, back_scat, ax=ax3)
+    clb.plots.plot_clb(date, cloud_height, ax=ax3)
 
     fig1.savefig(os.path.join('plots', 'lwr.pdf'))
     fig2.savefig(os.path.join('plots', 't_b.pdf'))
