@@ -8,5 +8,5 @@
 #   $ source config.sh
 
 # Include clb package to PYTHONPATH.
-SCRIPTS_PATH="$(readlink -f ./scripts)"
+SCRIPTS_PATH="$(readlink -f .)"
 export PYTHONPATH="${SCRIPTS_PATH}:${PYTHONPATH}"

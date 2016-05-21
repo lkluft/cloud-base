@@ -10,12 +10,12 @@ from typhon.arts import xml
 
 import clb
 
-
-f = xml.load(join('results', 'f_grid.xml'))
-z = xml.load(join('results', 'z_field.xml')).flatten()
-T_s = xml.load(join('results', 't_field.xml')).flatten()[0]
-iy = xml.load(join('results', 'iy.xml')).flatten()
-iy_aux = xml.load(join('results', 'iy_aux.xml'))
+result_dir = join('..', 'arts', 'results')
+f = xml.load(join(result_dir, 'f_grid.xml'))
+z = xml.load(join(result_dir, 'z_field.xml')).flatten()
+T_s = xml.load(join(result_dir, 't_field.xml')).flatten()[0]
+iy = xml.load(join(result_dir, 'iy.xml')).flatten()
+iy_aux = xml.load(join(result_dir, 'iy_aux.xml'))
 
 opacity = iy_aux[0].flatten()
 abs_sum = iy_aux[1][:, 0, 0, :].T

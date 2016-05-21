@@ -1,5 +1,3 @@
-# Ignore everything in this directory
+# Ignore SLURM files
 *.err
 *.out
-# Except this file
-!.gitignore
