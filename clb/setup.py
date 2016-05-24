@@ -9,7 +9,7 @@ setup(
     url='https://github.com/lkluft/cloud-base',
     version='0.1',
     packages=find_packages(),
-    license='LICENSE.txt',
+    license='MIT',
     include_package_data=True,
     install_requires=[
         'matplotlib>=1.5.1',
