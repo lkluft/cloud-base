@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Collection of functions to plot basic atmospheric properties.
+"""Plot basic atmospheric properties conveniently.
 """
 
 import matplotlib as mpl
