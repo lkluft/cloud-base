@@ -11,19 +11,17 @@ height from measured long wave radiation and near-surface temperature.
 Installation
 ============
 
-If you are using Anaconda (highly recommended) you can create an environment
-called cloud-base with all required depencies by executing following command in
-this directory.
+If you are using `Anaconda <https://www.continuum.io/downloads>` (highly
+recommended) you can create an environment called ``cloud-base`` with all
+dependencies required in ``environment.yml``.
+
+To do this simply run the following command in this directory.
 
     conda env create
 
-Afterwards you can install this package without the need for dependencies.
+Afterwards it is sufficient to install the package with ``pip``.
 
-    pip install --no-deps -e .
-
-If your are not using Anaconda you can run
-
-    pip install -e .
+    pip install --user --no-deps -e .
 
 Structure
 =========
