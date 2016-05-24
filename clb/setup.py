@@ -16,7 +16,7 @@ setup(
     version='0.1',
     packages=find_packages(),
     license='MIT',
-    long_description=open('README.txt').read(),
+    long_description=open('README.rst').read(),
     classifiers=[
         # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
         'Intended Audience :: Science/Research',
