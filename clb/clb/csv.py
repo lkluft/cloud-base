@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Collection of functions to load specific CSV files.
+"""Load CSV files stored in Wettermast format.
 """
 
 from matplotlib.dates import strpdate2num
@@ -11,25 +11,31 @@ __all__ = ['read',
            ]
 
 
-def _get_mpl_date(date, time):
-    """Convert date and time arrays into matplotlib time format..
+def _get_mpl_date(dates, fmt='%d.%m.%Y %H:%M'):
+    """Convert date strings into matplotlib time format.
 
     Parameters:
-        date (np.array): Array containing date strings.
-        time (np.array): Array containing time strings.
+        dates (np.array): Array containing date strings.
+        fmt (str): Date string format [0].
+
+    [0] http://pubs.opengroup.org/onlinepubs/009695399/functions/strptime.html
 
     Returns:
         np.array: Matplotlib time values.
 
     """
-    dates = zip(date, time)
-    mpl_dates =  [strpdate2num('%d.%m.%Y %H:%M')(' '.join(d)) for d in dates]
-
-    return np.array(mpl_dates)
+    return np.array([strpdate2num(fmt)(d) for d in dates])
 
 
 def _get_names(filename):
-    """Get variable names from CSV file."""
+    """Get variable names from CSV file.
+
+    Parameters:
+        filename (str): Path to CSV file.
+
+    Returns:
+        str: Comma separated list of variable names.
+    """
     with open(filename, "rb") as f:
         for line in f:
             if line.decode().startswith('$Names='):
@@ -37,22 +43,34 @@ def _get_names(filename):
 
 
 def _get_dtype(variable):
-    """Define dtypes for variables in CSV files."""
-    if variable == 'DATE':
-        return '<U10'
-    elif variable == 'TIME':
-        return '<U5'
+    """Define dtypes for variables in CSV files.
+
+    Parameters:
+        variable (str): Variable name.
+
+    Returns:
+        str: dtype of given variable.
+    """
+    variable_dtypes = {
+            'DATE': '<U10',
+            'TIME': '<U5',
+            }
+
+    if variable in variable_dtypes:
+        dtype = variable_dtypes[variable]
     else:
-        return 'f8'
+        dtype = 'f8'
+
+    return dtype
 
 
-def read(filename, variables=None):
+def read(filename, variables=None, output=None):
     """Read CSV files.
 
     Parameters:
         filename (str): Path to CSV file.
         variables (List[str]): List of variables to extract.
-            TIME, DATE and MPLTIME are always extracted.
+        output (dict): Dictionary that is updated with read data.
 
     Returns:
         dict: Dictionary containing the data arrays.
@@ -61,9 +79,12 @@ def read(filename, variables=None):
     names = _get_names(filename)
     dtype = [(n, _get_dtype(n)) for n in names.split(',')]
 
-    # Always read DATE and TIME.
+    # Read DATE and TIME even if they are not explicitly listed.
     if variables is not None:
-        variables = list(set(variables + ['DATE', 'TIME']))
+        usecols = list(set(variables + ['DATE', 'TIME']))
+    else:
+        variables = names.split(',')
+        usecols = None
 
     with open(filename, 'rb') as f:
         data = np.genfromtxt(f,
@@ -71,32 +92,47 @@ def read(filename, variables=None):
             skip_header=7,
             dtype=dtype,
             names=names,
-            usecols=variables,
+            usecols=usecols,
             )
 
-    data_dict = {var: data[var] for var in data.dtype.fields}
+    # Convert structured array to dictionary.
+    data_dict = {var: data[var] for var in variables}
 
-    data_dict['MPLTIME'] = _get_mpl_date(data['DATE'], data['TIME'])
+    # Always convert DATE and TIME into matplotlib time.
+    dates = [' '.join(d) for d in zip(data['DATE'], data['TIME'])]
+    data_dict['MPLTIME'] = _get_mpl_date(dates)
+
+    if output is not None:
+        data_dict = {**output, **data_dict}
 
     return data_dict
 
 
-def read_scat(filename):
+def read_scat(filename, output=None):
     """Read CLB.txt CSV files.
 
     Parameters:
         filename (str): Path to CSV file.
+        output (dict): Dictionary that is updated with read data.
 
     Returns:
         np.array, np.array: scattering coefficient, height levels
 
     """
-    z = np.arange(10, 10001, 10)
+    data_dict = {}
+    data_dict['Z'] = np.arange(10, 10001, 10)
 
     with open(filename, 'rb') as f:
         tmp = np.genfromtxt(f, delimiter=';', skip_header=7,
                 usecols=tuple(range(6, 1006)))
+
+        # mask negative and invalid data
         back_scat = np.ma.masked_invalid(tmp).T
         back_scat = np.ma.masked_less(back_scat, 0)
 
-    return back_scat, z
+    data_dict['BACK_SCAT'] = back_scat
+
+    if output is not None:
+        data_dict = {**output, **data_dict}
+
+    return data_dict

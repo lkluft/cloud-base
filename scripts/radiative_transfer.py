@@ -36,7 +36,7 @@ plt.style.use('typhon')
 dz = np.diff(z)
 abs_mean = (abs_sum[1:, :]+abs_sum[:-1, :]) / 2
 z_mean = (z[1:]+z[:-1]) / 2
-transmission = np.cumsum(abs_mean.T * np.diff(z), axis=1).T
+transmission = np.cumsum(abs_mean.T * dz, axis=1).T
 
 fig1, ax1 = plt.subplots()
 pcm = ax1.pcolormesh(f, z_mean, transmission,

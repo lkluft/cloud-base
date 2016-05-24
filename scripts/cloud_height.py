@@ -15,12 +15,13 @@ import clb
 def main(mfilename, cfilename):
     """Main function."""
     data = clb.csv.read(mfilename, variables=['L', 'TT002'])
+    data = clb.csv.read_scat(cfilename, output=data)
 
     date = data['MPLTIME']
     lwr = data['L']
     T_s = data['TT002'] + 273.15
-
-    back_scat, z = clb.csv.read_scat(cfilename)
+    z = data['Z']
+    back_scat = data['BACK_SCAT']
 
     cloud_height = clb.estimate_cloud_height(lwr, T_s)
 
