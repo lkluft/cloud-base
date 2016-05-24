@@ -26,18 +26,14 @@ Afterwards it is sufficient to install the package with ``pip``.
 Structure
 =========
 
-csv
+clb
 ---
-
 Functions to estimate the cloud base height.
 
-csv.csv
+clb.csv
 ^^^^^^^
+Load CSV files stored in Wettermast format.
 
-csv provides functionality to comfortably read CSV files.
-
-csv.plots
+clb.plots
 ^^^^^^^^^
-
-plots provides plotting routines to perform basic time series plots
-conveniently.
+Plot basic atmospheric properties conveniently.
