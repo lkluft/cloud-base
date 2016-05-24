@@ -10,6 +10,13 @@ setup(
     version='0.1',
     packages=find_packages(),
     license='MIT',
+    classifiers=[
+        # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
+        'Intended Audience :: Science/Research',
+        'Topic :: Atmospheric Science',
+        'License :: OSI Approved :: MIT License',
+        'Programming Language :: Python :: 3.5',
+    ],
     include_package_data=True,
     install_requires=[
         'matplotlib>=1.5.1',
