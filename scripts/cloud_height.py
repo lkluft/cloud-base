@@ -14,9 +14,9 @@ import clb
 
 def main(mfilename, cfilename):
     """Main function."""
-    date = clb.csv.read_mpl_date(mfilename)
+    data = clb.csv.read(mfilename, variables=['L', 'TT002'])
 
-    data = clb.csv.read_master(mfilename)
+    date = data['MPLTIME']
     lwr = data['L']
     T_s = data['TT002'] + 273.15
 
