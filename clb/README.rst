@@ -11,7 +11,7 @@ height from measured long wave radiation and near-surface temperature.
 Installation
 ============
 
-If you are using `Anaconda <https://www.continuum.io/downloads>` (highly
+If you are using `Anaconda <https://www.continuum.io/downloads>`_ (highly
 recommended) you can create an environment called ``cloud-base`` with all
 dependencies required in ``environment.yml``.
 
