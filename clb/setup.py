@@ -1,6 +1,12 @@
 # -*- coding: utf-8 -*-
+import sys
 from distutils.core import setup
 from setuptools import find_packages
+
+major, minor, micro = sys.version_info[0:3]
+if not (major == 3 and minor >= 5 and micro >= 1):
+    sys.exit('Only support Python version >=3.5.1.\n'
+             'Found version is {}'.format(sys.version))
 
 setup(
     name='clb',
