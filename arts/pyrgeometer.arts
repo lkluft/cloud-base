@@ -103,7 +103,14 @@ AntennaOff
 sensorOff
 
 # Opcacity
-ArrayOfStringSet( iy_aux_vars, ["Optical depth", "Absorption, summed"])
+ArrayOfStringSet( iy_aux_vars, ["Optical depth",
+                                "Absorption, summed",
+                                "Absorption, species 0",
+                                "Absorption, species 1",
+                                "Absorption, species 2",
+                                "Absorption, species 3",
+                                "Absorption, species 4"
+                                ])
 
 # Sensor position
 VectorCreate( z0 )
@@ -120,6 +127,7 @@ WriteXML( "binary", f_grid, "f_grid.xml" )
 WriteXML( "binary", p_grid, "p_grid.xml" )
 WriteXML( "binary", iy, "iy.xml" )
 WriteXML( "binary", iy_aux, "iy_aux.xml" )
+WriteXML( "binary", abs_species, "abs_species.xml" )
 WriteXML( "binary", z_field, "z_field.xml"  )
 WriteXML( "binary", t_field, "t_field.xml"  )
 }
