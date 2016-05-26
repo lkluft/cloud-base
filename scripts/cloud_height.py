@@ -49,4 +49,4 @@ def main(mfilename, cfilename):
     fig3.savefig(os.path.join('plots', 'clb.pdf'))
 
 if __name__ == '__main__':
-    main('data/MASTER2.txt', 'data/CLB2.txt')
+    main('data/MASTER.txt', 'data/CLB.txt')
