@@ -20,8 +20,8 @@ def main(mfilename, cfilename):
     date = data['MPLTIME']
     lwr = data['L']
     T_s = data['TT002'] + 273.15
-    z = data['Z']
-    back_scat = data['BACK_SCAT']
+    z = data['CLB_Z']
+    back_scat = data['CLB_MATRIX']
 
     cloud_height = clb.estimate_cloud_height(lwr, T_s)
 

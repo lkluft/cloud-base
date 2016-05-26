@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Load CSV files stored in Wettermast format.
 """
+import re
 
 from matplotlib.dates import strpdate2num
 import numpy as np
@@ -108,29 +109,38 @@ def read(filename, variables=None, output=None):
     return data_dict
 
 
-def read_scat(filename, output=None):
-    """Read CLB.txt CSV files.
+def read_scat(filename, scat_name='CLB_B\d{5}', output=None):
+    """Read scattering coefficients from CSV file.
 
     Parameters:
         filename (str): Path to CSV file.
         output (dict): Dictionary that is updated with read data.
+        scat_name (str): Python regular expression [0] matching
+            the variable name of the scattering coefficients.
+
+    [0] https://docs.python.org/3.1/library/re.html
 
     Returns:
         np.array, np.array: scattering coefficient, height levels
 
     """
-    data_dict = {}
-    data_dict['Z'] = np.arange(10, 10001, 10)
 
-    with open(filename, 'rb') as f:
-        tmp = np.genfromtxt(f, delimiter=';', skip_header=7,
-                usecols=tuple(range(6, 1006)))
+    data_dict = read(filename)
 
-        # mask negative and invalid data
-        back_scat = np.ma.masked_invalid(tmp).T
-        back_scat = np.ma.masked_less(back_scat, 0)
+    p = re.compile(scat_name)
 
-    data_dict['BACK_SCAT'] = back_scat
+    scat_vars = [var for var in data_dict.keys() if p.match(var)]
+    scat_vars.sort()
+
+    back_scat = np.vstack([data_dict[v] for v in scat_vars])
+    back_scat = np.ma.masked_invalid(back_scat)
+    back_scat = np.ma.masked_less(back_scat, 0)
+
+    data_dict['CLB_MATRIX'] = back_scat
+
+    # Extract height level from variable names.
+    data_dict['CLB_Z'] = np.array([float(re.sub('\D', '', h))
+                                  for h in scat_vars])
 
     if output is not None:
         data_dict = {**output, **data_dict}
