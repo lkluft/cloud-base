@@ -109,12 +109,13 @@ def read(filename, variables=None, output=None):
     return data_dict
 
 
-def read_scat(filename, scat_name='CLB_B\d{5}', output=None):
+def read_scat(filename, dz=10, scat_name='CLB_B\d{5}', output=None):
     """Read scattering coefficients from CSV file.
 
     Parameters:
         filename (str): Path to CSV file.
         output (dict): Dictionary that is updated with read data.
+        dz (float): Height resolution of the ceilometer.
         scat_name (str): Python regular expression [0] matching
             the variable name of the scattering coefficients.
 
@@ -139,8 +140,7 @@ def read_scat(filename, scat_name='CLB_B\d{5}', output=None):
     data_dict['CLB_MATRIX'] = back_scat
 
     # Extract height level from variable names.
-    data_dict['CLB_Z'] = np.array([float(re.sub('\D', '', h))
-                                  for h in scat_vars])
+    data_dict['CLB_Z'] = np.arange(dz, dz * (len(scat_vars)+1), dz)
 
     if output is not None:
         data_dict = {**output, **data_dict}
