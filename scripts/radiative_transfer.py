@@ -10,13 +10,15 @@ from typhon.arts import xml
 
 import clb
 
-result_dir = join('..', 'arts', 'results')
-f = xml.load(join(result_dir, 'f_grid.xml'))
-z = xml.load(join(result_dir, 'z_field.xml')).flatten()
-T_s = xml.load(join(result_dir, 't_field.xml')).flatten()[0]
-iy = xml.load(join(result_dir, 'iy.xml')).flatten()
-iy_aux = xml.load(join(result_dir, 'iy_aux.xml'))
-abs_species = xml.load(join(result_dir, 'abs_species.xml'))
+
+pathto = join('..', 'arts', 'results', '{}').format
+
+f = xml.load(pathto('f_grid.xml'))
+z = xml.load(pathto('z_field.xml')).flatten()
+T_s = xml.load(pathto('t_field.xml')).flatten()[0]
+iy = xml.load(pathto('iy.xml')).flatten()
+iy_aux = xml.load(pathto('iy_aux.xml'))
+abs_species = xml.load(pathto('abs_species.xml'))
 
 abs_sum = iy_aux[1][:, 0, 0, :].T
 
