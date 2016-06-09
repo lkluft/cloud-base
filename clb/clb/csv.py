@@ -97,16 +97,17 @@ def read(filename, variables=None, output=None):
             )
 
     # Convert structured array to dictionary.
-    data_dict = {var: data[var] for var in variables}
+    if output is None:
+        output = {var: data[var] for var in variables}
+    else:
+        for var in variables:
+            output[var] = data[var]
 
     # Always convert DATE and TIME into matplotlib time.
     dates = [' '.join(d) for d in zip(data['DATE'], data['TIME'])]
-    data_dict['MPLTIME'] = _get_mpl_date(dates)
+    output['MPLTIME'] = _get_mpl_date(dates)
 
-    if output is not None:
-        data_dict = {**output, **data_dict}
-
-    return data_dict
+    return output
 
 
 def read_scat(filename, dz=10, scat_name='CLB_B\d{5}', output=None):
@@ -126,23 +127,20 @@ def read_scat(filename, dz=10, scat_name='CLB_B\d{5}', output=None):
 
     """
 
-    data_dict = read(filename)
+    output = read(filename, output=output)
 
     p = re.compile(scat_name)
 
-    scat_vars = [var for var in data_dict.keys() if p.match(var)]
+    scat_vars = [var for var in output.keys() if p.match(var)]
     scat_vars.sort()
 
-    back_scat = np.vstack([data_dict[v] for v in scat_vars])
+    back_scat = np.vstack([output[v] for v in scat_vars])
     back_scat = np.ma.masked_invalid(back_scat)
     back_scat = np.ma.masked_less(back_scat, 0)
 
-    data_dict['CLB_MATRIX'] = back_scat
+    output['CLB_MATRIX'] = back_scat
 
     # Extract height level from variable names.
-    data_dict['CLB_Z'] = np.arange(dz, dz * (len(scat_vars)+1), dz)
+    output['CLB_Z'] = np.arange(dz, dz * (len(scat_vars)+1), dz)
 
-    if output is not None:
-        data_dict = {**output, **data_dict}
-
-    return data_dict
+    return output

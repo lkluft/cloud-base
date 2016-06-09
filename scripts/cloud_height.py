@@ -15,7 +15,7 @@ import clb
 def main(mfilename, cfilename):
     """Main function."""
     data = clb.csv.read(mfilename, variables=['L', 'TT002'])
-    data = clb.csv.read_scat(cfilename, output=data)
+    clb.csv.read_scat(cfilename, output=data)
 
     date = data['MPLTIME']
     lwr = data['L']
