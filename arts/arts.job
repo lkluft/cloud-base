@@ -9,11 +9,13 @@
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=16
 
-RESULTS_DIR='results/'
-CONTROLF='pyrgeometer.arts'
+[[ -z "${ATMOSPHERE}" ]] && ATMOSPHERE='tropical'
 
 ARTS='/scratch/uni/u237/users/lkluft/arts/build/src/arts'
-ARTS_OPTIONS="-o ${RESULTS_DIR}"
+CONTROLF='pyrgeometer.arts'
+RESULTS_DIR="results/${ATMOSPHERE}"
+[[ -d "${RESULTS_DIR}" ]] || mkdir "${RESULTS_DIR}"
+export ATMPATH="planets/Earth/Fascod/${ATMOSPHERE}/${ATMOSPHERE}"
 
 # actual ARTS run
-OMP_NUM_THREADS=16 ${ARTS} ${ARTS_OPTIONS} ${CONTROLF}
+OMP_NUM_THREADS=16 ${ARTS} -o ${RESULTS_DIR} ${CONTROLF}
