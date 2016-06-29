@@ -140,9 +140,9 @@
 \begin{column}{0.55\textwidth}
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=1\textwidth]{figures/opacity.pdf}
+    \includegraphics[width=1\textwidth]{figures/midlatitude-summer_window.pdf}
     \caption{Opazität in Abhängigkeit von Frequenz und Höhe.}
-    \label{fig:opacity}
+    \label{fig:window}
 \end{figure}
 \end{column}
 \end{columns}
@@ -151,7 +151,7 @@
 \begin{frame}{Radianzspektrum}
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.8\textwidth]{figures/spectrum.pdf}
+    \includegraphics[width=0.8\textwidth]{figures/midlatitude-summer_spectrum.pdf}
     \caption{Radianz in Abhängigkeit der Frequenz.}
     \label{fig:spectrum}
 \end{figure}
@@ -162,9 +162,9 @@
   \vfill\item Differenz der gemessenen LWR und der LWR der bodennahen
       Atmosphäre ist die entscheidende Größe
       \[ \Delta LWR = LWR - \int B_\nu(\nu, T_s) \partial\nu \]
-  \vfill\item Die Differenz der Helligkeitstemperaturen gibt anschaulich an,
-      wie viel Kelvin das optische Fenster kälter ist als die Temperatur am
-      Boden
+  \vfill\item Die Differenz der Helligkeitstemperaturen $\Delta T_{LWR}$ gibt
+      anschaulich an, wie viel Kelvin das optische Fenster kälter ist als die
+      Temperatur am Boden
   \vfill\item Umrechnung in eine Höhe mittels Temperaturgradienten $\gamma$
       \[ CLB_{est} = \frac{\Delta T_{LWR}}{\gamma} \]
   \vfill
@@ -174,16 +174,16 @@
 
 \section{Ergebnisse}
 \begin{frame}{Ergebnisse}
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1\textwidth]{figures/clb.pdf}
+    \caption{Zeitreihe der berechneten Wolkenhöhe sowie der Ceilometer-Rückstreuung.}
+    \label{fig:clb}
+\end{figure}
 \begin{itemize}
   \item $CLB_{est}$ im wolkenfreien Fall gibt eine Abschätzung der maximalen
       Detektionshöhe
 \end{itemize}
-\begin{figure}[ht]
-    \centering
-    \includegraphics[width=1\textwidth]{figures/ceilometer.png}
-    \caption{Zeitreihe der berechneten Wolkenhöhe sowie der Ceilometer-Rückstreuung.}
-    \label{fig:clb}
-\end{figure}
 \end{frame}
 
 \begin{frame}{Fazit}
@@ -198,18 +198,27 @@
 \end{itemize}
 \end{frame}
 
+\section{Ausblick}
 \begin{frame}{Ausblick}
 \begin{itemize}
   \vfill\item Verbesserung des vertikalen Temperaturgradienten über
       Einbeziehung der Bodenfeuchte
   \vfill\item Einschränkung des Pyrgeometer-Blickwinkels (Metallrohr) zur
       besseren Vergleichbarkeit mit Ceilometermessungen
-  \vfill\item Wolkenfreie Messungen bieten Informationen über den
-      Wasserdampfgehalt der Atmosphäre. Eine Regression von
-        Strahlungstransfersimulationen verschiedener Atmosphären bietet die
-        Möglichkeit einer Abschätzung der Wasserdampfsäule
+  \vfill\item Wasserdampfretrieval an wolkenfreien Tagen
   \vfill
 \end{itemize}
+\end{frame}
+
+\begin{frame}{Wasserdampfretrieval}
+Wolkenfreie Messungen enthalten Informationen über den Wasserdampfgehalt der Atmosphäre. Eine Regression von Strahlungstransfersimulationen verschiedener Atmosphären bietet die Möglichkeit die Wasserdampfsäule abzuschätzen.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.7\textwidth]{figures/midlatitude-summer_opacity.pdf}
+	\caption{Opazitätsspektrum verschiedener Absorber.}
+	\label{fig:opacity}
+\end{figure}
 \end{frame}
 
 \end{document}
