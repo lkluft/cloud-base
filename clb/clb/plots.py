@@ -157,4 +157,3 @@ def plot_back_scat(date, z, back_scat, ax=None):
     cb.set_label('Rückstreuintensität')
 
     return pcm, cb
-

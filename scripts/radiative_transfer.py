@@ -29,7 +29,7 @@ for atmosphere in fascod:
 
     abs_sum = iy_aux[1][:, 0, 0, :].T
 
-    ## Calculations
+    # Calculations
     # maximal detection height based on clear-sky ARTS run.
     lwr = clb.integrate_spectrum(f, iy)
 
@@ -46,14 +46,12 @@ for atmosphere in fascod:
         opacity = np.sum(layer_thickness * abs_layer_mean, axis=1)
         return opacity
 
-
     opacity = {}
     for species, coeff in zip(abs_species, iy_aux[2:]):
         opacity[species] = calculate_optical_depth(coeff[:, 0, 0, ::-1], z)
 
-
-    ## Plots
-    f *= 1e-12  #convert to THz
+    # Plots
+    f *= 1e-12  # convert to THz
     plt.style.use('typhon')
 
     # opacity for different species
@@ -69,7 +67,6 @@ for atmosphere in fascod:
     ax.set_ylabel('Optische Dicke')
     ax.legend(ncol=2, fontsize='smaller')
 
-
     # opacity in different heights
     dz = np.diff(z)
     abs_mean = (abs_sum[1:, :]+abs_sum[:-1, :]) / 2
@@ -78,10 +75,10 @@ for atmosphere in fascod:
 
     fig1, ax1 = plt.subplots()
     pcm = ax1.pcolormesh(f, z_mean, transmission,
-                        vmin=0,
-                        vmax=1,
-                        cmap=plt.get_cmap('density', lut=10),
-                        rasterized=True)
+                         vmin=0,
+                         vmax=1,
+                         cmap=plt.get_cmap('density', lut=10),
+                         rasterized=True)
     ax1.set_xlim(f.min(), f.max())
     ax1.set_xlabel('Frequenz [THz]')
     ax1.set_ylim(z_mean.min(), 8000)
@@ -92,8 +89,8 @@ for atmosphere in fascod:
     # radiance spectrum
     fig2, ax2 = plt.subplots()
     ax2.fill_between(f, clb.planck(f*1e12, T_s),
-                    color='lightgrey',
-                    label='Planck')
+                     color='lightgrey',
+                     label='Planck')
     ax2.fill_between(f, iy, color='darkred', label='Messung')
     ax2.legend()
     ax2.set_xlim(f.min(), f.max())

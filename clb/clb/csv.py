@@ -88,7 +88,8 @@ def read(filename, variables=None, output=None):
         usecols = None
 
     with open(filename, 'rb') as f:
-        data = np.genfromtxt(f,
+        data = np.genfromtxt(
+            f,
             delimiter=';',
             skip_header=7,
             dtype=dtype,

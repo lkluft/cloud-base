@@ -48,7 +48,7 @@ def planck(f, T):
         np.array: Radiances.
 
     """
-    return 2 * h * f**3 / c**2 * (np.exp(h*f/k/T) -1)**-1
+    return 2 * h * f**3 / c**2 * (np.exp(h*f/k/T) - 1)**-1
 
 
 def integrate_planck(f, T):
