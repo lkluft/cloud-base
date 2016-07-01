@@ -46,7 +46,7 @@ def main(mfilename, cfilename):
 
     fig1.savefig(os.path.join('plots', 'lwr.pdf'))
     fig2.savefig(os.path.join('plots', 't_b.pdf'))
-    fig3.savefig(os.path.join('plots', 'clb.pdf'))
+    fig3.savefig(os.path.join('plots', 'clb.pdf'), dpi=600)
 
 if __name__ == '__main__':
     main('data/MASTER.txt', 'data/CLB.txt')
