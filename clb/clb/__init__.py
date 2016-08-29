@@ -6,6 +6,7 @@ cloud base height (CLB) by measuring the downward longwave radiation.
 
 import matplotlib.pyplot as plt
 import numpy as np
+import typhon.physics
 from scipy.constants import c, h, k, Stefan_Boltzmann
 
 from . import csv
@@ -18,7 +19,6 @@ __all__ = ['csv',
            'integrate_planck',
            'lwr_surrounding',
            'lwr_to_T_b',
-           'planck',
            ]
 
 
@@ -37,18 +37,18 @@ def estimate_cloud_height(lwr, T_s, lapse_rate=-0.0065):
     return (lwr_to_T_b(lwr) - lwr_to_T_b(lwr_surrounding(T_s))) / lapse_rate
 
 
-def planck(f, T):
-    """Planck spectrum for temperature T.
+# def planck(f, T):
+#     """Planck spectrum for temperature T.
 
-    Parameters:
-        f (np.array): Frquencies.
-        T (float): Temperature.
+#     Parameters:
+#         f (np.array): Frquencies.
+#         T (float): Temperature.
 
-    Returns:
-        np.array: Radiances.
+#     Returns:
+#         np.array: Radiances.
 
-    """
-    return 2 * h * f**3 / c**2 * (np.exp(h*f/k/T) - 1)**-1
+#     """
+#     return 2 * h * f**3 / c**2 * (np.exp(h*f/k/T) - 1)**-1
 
 
 def integrate_planck(f, T):
@@ -63,7 +63,7 @@ def integrate_planck(f, T):
 
     """
     ff, TT = np.meshgrid(f, T)
-    B = planck(ff, TT)
+    B = typhon.physics.planck(ff, TT)
 
     B_mean = (B[:, 1:] + B[:, :-1]) / 2
     df = np.diff(ff, axis=1)

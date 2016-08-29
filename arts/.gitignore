@@ -1,3 +1,5 @@
 # Ignore SLURM files
 *.err
 *.out
+*.xml
+*.xml.bin

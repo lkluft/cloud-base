@@ -6,6 +6,7 @@ from os.path import join
 import numpy as np
 import matplotlib.pyplot as plt
 import typhon.cm
+import typhon.physics
 from typhon.arts import xml
 
 import clb
@@ -88,7 +89,7 @@ for atmosphere in fascod:
 
     # radiance spectrum
     fig2, ax2 = plt.subplots()
-    ax2.fill_between(f, clb.planck(f*1e12, T_s),
+    ax2.fill_between(f, typhon.physics.planck(f*1e12, T_s),
                      color='lightgrey',
                      label='Planck')
     ax2.fill_between(f, iy, color='darkred', label='Messung')
