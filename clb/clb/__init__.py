@@ -16,6 +16,7 @@ from . import plots
 __all__ = ['csv',
            'plots',
            'estimate_cloud_height',
+           'delta_Tb',
            'integrate_planck',
            'lwr_surrounding',
            'lwr_to_T_b',
@@ -34,21 +35,21 @@ def estimate_cloud_height(lwr, T_s, lapse_rate=-0.0065):
         np.array: Estimated cloud base height.
     """
 
-    return (lwr_to_T_b(lwr) - lwr_to_T_b(lwr_surrounding(T_s))) / lapse_rate
+    return delta_Tb(lwr, T_s) / lapse_rate
 
 
-# def planck(f, T):
-#     """Planck spectrum for temperature T.
+def delta_Tb(lwr, T_s):
+    """Calculate the difference between measured spectrum and Planck.
 
-#     Parameters:
-#         f (np.array): Frquencies.
-#         T (float): Temperature.
+    Parameters:
+        lwr: Measure longwave radiation [Wm**-2].
+        T: Surface temperature [K].
 
-#     Returns:
-#         np.array: Radiances.
+    Returns:
+        Integrated spectrum difference [K].
 
-#     """
-#     return 2 * h * f**3 / c**2 * (np.exp(h*f/k/T) - 1)**-1
+    """
+    return lwr_to_T_b(lwr) - lwr_to_T_b(lwr_surrounding(T_s))
 
 
 def integrate_planck(f, T):
