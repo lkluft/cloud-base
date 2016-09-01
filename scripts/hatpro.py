@@ -19,14 +19,16 @@ pcm = ax1.pcolormesh(data['MPLTIME'], data['T_PROFILE_Z'] / 1e3, data['T_PROFILE
                      cmap=plt.get_cmap('temperature', 10),
                      rasterized=True)
 ax1.set_ylabel('Höhe [km]')
+ax1.set_xlabel('Datum')
 plots.set_date_axis(ax1)
 cb = fig.colorbar(pcm, ax=ax1)
-cb.set_label('Temperature [C]')
+cb.set_label('Temperatur [C]')
 
 pcm = ax2.pcolormesh(data['MPLTIME'], data['RH_PROFILE_Z'] / 1e3, data['RH_PROFILE'],
                      cmap=plt.get_cmap('density', 10),
                      rasterized=True)
 ax2.set_ylabel('Höhe [km]')
+ax2.set_xlabel('Datum')
 plots.set_date_axis(ax2)
 cb = fig.colorbar(pcm, ax=ax2)
 cb.set_label('Relative Feuchte [%]')
