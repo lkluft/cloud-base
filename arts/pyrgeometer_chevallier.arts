@@ -61,12 +61,12 @@ abs_lineshape_per_tgDefine( abs_lineshape, abs_species,
 # abs_lines_per_speciesCreateFromLines
 
 # A pressure grid rougly matching 0 to 12 km
-VectorNLogSpace( p_grid, 100, 1000e2, 100e2 )
+# VectorNLogSpace( p_grid, 100, 1000e2, 100e2 )
 
 # Atmospheric scenario
 AtmosphereSet1D
-ReadXML( batch_atm_fields_compact,
-         "planets/Earth/ECMWF/IFS/Chevallier_91L/chevallierl91_all_full.xml.gz" )
+# ReadXML( batch_atm_fields_compact, "planets/Earth/ECMWF/IFS/Chevallier_91L/chevallierl91_all_full.xml.gz" )
+ReadXML( batch_atm_fields_compact, "midlatitude-summer-synthetic-iwp.xml" )
 # add constant profiles for O2, N2, and CO2
 batch_atm_fields_compactAddConstant( name="abs_species-O2", value=0.2095 )
 batch_atm_fields_compactAddConstant( name="abs_species-N2", value=0.7808 )

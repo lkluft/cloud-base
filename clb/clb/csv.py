@@ -8,6 +8,7 @@ import numpy as np
 
 
 __all__ = ['read',
+           'read_profile',
            'read_scat',
            ]
 
@@ -111,7 +112,44 @@ def read(filename, variables=None, output=None):
     return output
 
 
-def read_scat(filename, dz=10, scat_name='CLB_B\d{5}', output=None):
+def read_profile(filename, dz=10, var_regex=None, var_key='PROFILE',
+                 output=None):
+    """Read scattering coefficients from CSV file.
+
+    Parameters:
+        filename (str): Path to CSV file.
+        output (dict): Dictionary that is updated with read data.
+        dz (float): Height resolution.
+        var_regex (str): Python regular expression [0] matching
+            the variable name of the profile.
+        var_key (str): Dictionary key for extracted profile.
+
+    [0] https://docs.python.org/3.1/library/re.html
+
+    Returns:
+        np.ndarray: Profile.
+
+    """
+
+    output = read(filename, output=output)
+
+    p = re.compile(var_regex)
+
+    var_names = [var for var in output.keys() if p.match(var)]
+    var_names.sort()
+
+    profile = np.vstack([output[v] for v in var_names])
+
+    z = [float(re.sub('[^0-9]', '', v)) for v in var_names]
+
+    # Extract height information from variable name.
+    output[var_key] = np.ma.masked_invalid(profile)
+    output[var_key + '_Z'] = np.array(z)
+
+    return output
+
+
+def read_scat(filename, var_regex='CLB_B\d{5}', output=None):
     """Read scattering coefficients from CSV file.
 
     Parameters:
@@ -128,20 +166,15 @@ def read_scat(filename, dz=10, scat_name='CLB_B\d{5}', output=None):
 
     """
 
-    output = read(filename, output=output)
+    output = read_profile(
+        filename,
+        var_key='CLB_MATRIX',
+        var_regex=var_regex,
+        output=output)
 
-    p = re.compile(scat_name)
-
-    scat_vars = [var for var in output.keys() if p.match(var)]
-    scat_vars.sort()
-
-    back_scat = np.vstack([output[v] for v in scat_vars])
-    back_scat = np.ma.masked_invalid(back_scat)
+    back_scat = output['CLB_MATRIX']
     back_scat = np.ma.masked_less(back_scat, 0)
 
     output['CLB_MATRIX'] = back_scat
-
-    # Extract height level from variable names.
-    output['CLB_Z'] = np.arange(dz, dz * (len(scat_vars)+1), dz)
 
     return output

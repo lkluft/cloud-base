@@ -145,7 +145,8 @@ def plot_back_scat(date, z, back_scat, ax=None):
     pcm = ax.pcolormesh(date, z, back_scat,
                         cmap=plt.get_cmap('density', lut=6),
                         vmin=0,
-                        vmax=1921,
+                        vmax=400,
+                        # vmax=1921,
                         rasterized=True)
 
     ax.set_ylim(0, 4000)
