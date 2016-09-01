@@ -74,7 +74,7 @@ batch_atm_fields_compactAddConstant( name="abs_species-CO2", value=3.3e-4 )
 
 # Set number of batch cases
 IndexSet( ybatch_start, 0)
-# nelemGet( ybatch_n, batch_atm_fields_compact )
+nelemGet( ybatch_n, batch_atm_fields_compact )
 
 # Weakly reflecting surface
 VectorSetConstant( surface_scalar_reflectivity, 1, 0. )
