@@ -65,8 +65,8 @@ abs_lineshape_per_tgDefine( abs_lineshape, abs_species,
 
 # Atmospheric scenario
 AtmosphereSet1D
-# ReadXML( batch_atm_fields_compact, "planets/Earth/ECMWF/IFS/Chevallier_91L/chevallierl91_all_full.xml.gz" )
-ReadXML( batch_atm_fields_compact, "midlatitude-summer-synthetic-iwp.xml" )
+ReadXML( batch_atm_fields_compact, "planets/Earth/ECMWF/IFS/Chevallier_91L/chevallierl91_all_full.xml.gz" )
+
 # add constant profiles for O2, N2, and CO2
 batch_atm_fields_compactAddConstant( name="abs_species-O2", value=0.2095 )
 batch_atm_fields_compactAddConstant( name="abs_species-N2", value=0.7808 )
@@ -74,7 +74,7 @@ batch_atm_fields_compactAddConstant( name="abs_species-CO2", value=3.3e-4 )
 
 # Set number of batch cases
 IndexSet( ybatch_start, 0)
-nelemGet( ybatch_n, batch_atm_fields_compact )
+# nelemGet( ybatch_n, batch_atm_fields_compact )
 
 # Weakly reflecting surface
 VectorSetConstant( surface_scalar_reflectivity, 1, 0. )
@@ -97,6 +97,9 @@ jacobianOff
 AntennaOff
 sensorOff
 
+VectorCreate( temp )
+NumericCreate( z0 )
+IndexCreate( npos )
 AgendaSet( ybatch_calc_agenda )
 {
     # Extract the atmospheric profiles for this case:
@@ -112,8 +115,12 @@ AgendaSet( ybatch_calc_agenda )
 
     # Definition of sensor position and LOS
     Extract( z_surface, z_field, 0 )
-    Copy( sensor_pos, z_surface )
-    MatrixSet( sensor_los, [0] )
+    VectorExtractFromMatrix( temp, z_surface, 0, "row" )
+    Extract( z0, temp, 0 )
+    MatrixSet( sensor_los, [0; 15; 30; 45; 60; 75; 85] )
+    nrowsGet( npos, sensor_los )
+    MatrixSetConstant( sensor_pos, npos, 1, z0 )
+
 
     # Perform RT calculations
     abs_xsec_agenda_checkedCalc
