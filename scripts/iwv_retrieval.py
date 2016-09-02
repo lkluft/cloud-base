@@ -16,6 +16,7 @@ ybatch = xml.load('../arts/results/angles/ybatch.xml')
 f = xml.load('../arts/results/angles/f_grid.xml')
 los = xml.load('../arts/results/angles/sensor_los.xml')
 
+
 def integrate_angles(f, y_los, los):
     """Integrate spectrum over frequency and angles.
 
@@ -31,7 +32,7 @@ def integrate_angles(f, y_los, los):
     y_int = np.zeros(f.size)
     for y, a in zip(np.split(y_los, los.size), los):
         y_int += np.cos(np.deg2rad(a)) * y * np.deg2rad(15)
-    return clb.integrate_spectrum(f, y_int) 
+    return clb.integrate_spectrum(f, y_int)
 
 
 iwv = np.zeros(len(atmospheres))
@@ -61,6 +62,7 @@ ax.set_xlabel('Wasserdampfsäule [$kg\,m^{-2}$]')
 cb = fig.colorbar(pcm)
 cb.set_label('Anzahl')
 fig.savefig('iwv_lwr_correlation.pdf')
+
 
 # Fit IWV(LWR).
 def IWV(dT, a, b, c):
