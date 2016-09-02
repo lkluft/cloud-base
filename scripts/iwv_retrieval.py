@@ -16,18 +16,18 @@ atmospheres = xml.load('/home/lukas/arts-xml-data/planets/Earth/ECMWF/IFS/Cheval
 ybatch = xml.load('../arts/results/ybatch.xml')
 f = xml.load('../arts/results/f_grid.xml')
 
-iwp = np.zeros(len(atmospheres))
+iwv = np.zeros(len(atmospheres))
 lwr = np.zeros(len(ybatch))
 for i in range(len(atmospheres)):
     z, T, q = atm_fields_compact_get(
         ['z', 'T', 'abs_species-H2O'],
         atmospheres[i])
     p = atmospheres[i].grids[1]
-    iwp[i] = typhon.atmosphere.iwp(q.ravel(), p, T.ravel(), z.ravel())
+    iwv[i] = typhon.atmosphere.iwv(q.ravel(), p, T.ravel(), z.ravel())
     lwr[i] = clb.integrate_spectrum(f, ybatch[i], factor=np.pi)
 
 # IWP and LWR correlation (ARTS simulation)
-N, x, y = np.histogram2d(iwp, lwr, (25, 25))
+N, x, y = np.histogram2d(iwv, lwr, (25, 25))
 
 plt.style.use('typhon')
 
@@ -35,14 +35,14 @@ fig, ax = plt.subplots()
 pcm = ax.pcolormesh(x, y, N.T,
                     cmap=plt.get_cmap('cubehelix_r'),
                     rasterized=True)
-ax.set_title('r = {:.3f}'.format(np.corrcoef(iwp, lwr)[0, 1]))
+ax.set_title('r = {:.3f}'.format(np.corrcoef(iwv, lwr)[0, 1]))
 ax.set_xlim(0, x.max())
 ax.set_ylim(y.min(), y.max())
 ax.set_ylabel(r'Langwellige Einstrahlung [$Wm^{-2}$]')
 ax.set_xlabel('Wasserdampfsäule [$kg\,m^{-2}$]')
 cb = fig.colorbar(pcm)
 cb.set_label('Anzahl')
-fig.savefig('plots/iwp_lwr_correlation.pdf')
+fig.savefig('plots/iwv_lwr_correlation.pdf')
 
 
 # Fit IWP(LWR).
@@ -50,10 +50,10 @@ def IWP(dT, a, b, c):
     return a * np.exp(b * dT) + c
 
 
-popt, pcov = curve_fit(IWP, lwr, iwp, p0=[10, 0.001, 0])
+popt, pcov = curve_fit(IWP, lwr, iwv, p0=[10, 0.001, 0])
 
 fig, ax = plt.subplots()
-N, x, y = np.histogram2d(lwr, iwp, (25, 25))
+N, x, y = np.histogram2d(lwr, iwv, (25, 25))
 pcm = ax.pcolormesh(x, y, N.T,
                     cmap=plt.get_cmap('density', 8),
                     rasterized=True)
@@ -69,4 +69,4 @@ ax.set_ylabel(r'Wasserdampfsäule [$kg\,m^{-2}$]')
 ax.legend()
 cb = fig.colorbar(pcm)
 cb.set_label('Anzahl')
-fig.savefig('plots/iwp_lwr_fit.pdf')
+fig.savefig('plots/iwv_lwr_fit.pdf')
