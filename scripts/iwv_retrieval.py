@@ -61,7 +61,7 @@ ax.set_ylabel(r'Langwellige Einstrahlung [$Wm^{-2}$]')
 ax.set_xlabel('Wasserdampfsäule [$kg\,m^{-2}$]')
 cb = fig.colorbar(pcm)
 cb.set_label('Anzahl')
-fig.savefig('iwv_lwr_correlation.pdf')
+fig.savefig('plots/iwv_lwr_correlation.pdf')
 
 
 # Fit IWV(LWR).
@@ -77,7 +77,7 @@ pcm = ax.pcolormesh(x, y, N.T,
                     cmap=plt.get_cmap('density', 8),
                     rasterized=True)
 x = np.linspace(lwr.min(), lwr.max(), 100)
-ax.plot(x, IWP(x, *popt),
+ax.plot(x, IWV(x, *popt),
         color='darkorange',
         label='Fit',
         linewidth=4)
@@ -88,7 +88,7 @@ ax.set_ylabel(r'Wasserdampfsäule [$kg\,m^{-2}$]')
 ax.legend()
 cb = fig.colorbar(pcm)
 cb.set_label('Anzahl')
-fig.savefig('iwv_lwr_fit.pdf')
+fig.savefig('plots/iwv_lwr_fit.pdf')
 
 # Use the fit...
 pyr = clb.csv.read('data/MASTER.txt')
@@ -109,7 +109,7 @@ ax.set_ylabel('Wasserdampfsäule [$kgm^{-2}$]')
 ax.set_xlabel('Langwellige Einstrahlung [$Wm{-2}$]')
 ax.set_ylim(0, 40)
 ax.legend()
-fig.savefig('messung_fit.pdf')
+fig.savefig('plots/messung_fit.pdf')
 
 # Timeseries
 fig, ax = plt.subplots()
@@ -123,7 +123,7 @@ clb.plots.plot_time_series(rad['MPLTIME'], iwv_pyr,
                            color='darkred')
 ax.legend()
 ax.set_ylim(0, 40)
-fig.savefig('iwv_timeseries.pdf')
+fig.savefig('plots/iwv_timeseries.pdf')
 
 # Correlation between fit and measurement.
 fig, ax = plt.subplots()
@@ -136,4 +136,4 @@ ax.set_xlabel('Radiometer IWV [$kg\,m{-2}$]')
 ax.set_aspect('equal')
 ax.set_title('r = {:.3f}'.format(np.ma.corrcoef(iwv_rad, iwv_pyr)[0, 1]))
 fig.colorbar(pcm, label='Anzahl')
-fig.savefig('iwv_fit_correlation.pdf')
+fig.savefig('plots/iwv_fit_correlation.pdf')
