@@ -191,7 +191,12 @@ def write_dict(filename, data, variables=None):
 
     """
     if variables is None:
-        variables = sorted(list(data.keys()))
+        variables = list(sorted(data.keys()))
+        # Write date and time to first columns.
+        for k in ['TIME', 'DATE']:
+            if k in variables:
+                variables.remove(k)
+                variables.insert(0, k)
 
     header = ";".join(variables)
     data = np.vstack(data[v] for v in variables).T
