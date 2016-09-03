@@ -31,7 +31,7 @@ def integrate_angles(f, y_los, los):
     """
     y_int = np.zeros(f.size)
     for y, a in zip(np.split(y_los, los.size), los):
-        y_int += np.cos(np.deg2rad(a)) * y * np.deg2rad(15)
+        y_int += np.cos(np.deg2rad(a)) * y * np.sin(np.deg2rad(10))
     return clb.integrate_spectrum(f, y_int)
 
 
@@ -116,13 +116,13 @@ fig, ax = plt.subplots()
 clb.plots.plot_time_series(rad['MPLTIME'], iwv_rad,
                            ylabel='Wasserdampfsäule [$kg\,m^{-2}$]',
                            label='Radiometer',
-                           color='darkblue')
+                           color='blue')
 clb.plots.plot_time_series(rad['MPLTIME'], iwv_pyr,
                            ylabel='Wasserdampfsäule [$kg\,m^{-2}$]',
                            label='Pyrgeometer',
-                           color='darkred')
+                           color='red')
 ax.legend()
-ax.set_ylim(0, 40)
+ax.set_ylim(0, 50)
 fig.savefig('plots/iwv_timeseries.pdf')
 
 # Correlation between fit and measurement.
@@ -130,7 +130,7 @@ fig, ax = plt.subplots()
 x = y = np.linspace(0, 40, 25)
 ax.plot(x, y, linestyle='--', color='k', linewidth=1)
 N, x, y = np.histogram2d(iwv_rad, iwv_pyr, (x, y))
-pcm = ax.pcolormesh(x, y, N, cmap='Greys')
+pcm = ax.pcolormesh(x, y, N.T, cmap='Greys')
 ax.set_ylabel('Pyrgeometer IWV [$kg\,m^{-2}$]')
 ax.set_xlabel('Radiometer IWV [$kg\,m{-2}$]')
 ax.set_aspect('equal')

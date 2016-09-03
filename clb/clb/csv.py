@@ -10,6 +10,7 @@ import numpy as np
 __all__ = ['read',
            'read_profile',
            'read_scat',
+           'write_dict',
            ]
 
 
@@ -178,3 +179,21 @@ def read_scat(filename, var_regex='CLB_B\d{5}', output=None):
     output['CLB_MATRIX'] = back_scat
 
     return output
+
+
+def write_dict(filename, data, variables=None):
+    """Write data from dictionary to CSV file.
+
+    Parameters:
+        filename (str): Path to CSV file.
+        data (dict): Dictionary containing data.
+        variables (list[str]): Variables to store (default: all).
+
+    """
+    if variables is None:
+        variables = sorted(list(data.keys()))
+
+    header = ";".join(variables)
+    data = np.vstack(data[v] for v in variables).T
+
+    np.savetxt(filename, data, delimiter=';', header=header, fmt='%s')
