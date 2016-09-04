@@ -32,7 +32,7 @@ def integrate_angles(f, y_los, los):
     y_int = np.zeros(f.size)
     for y, a in zip(np.split(y_los, los.size), los):
         y_int += np.cos(np.deg2rad(a)) * y * np.sin(np.deg2rad(10))
-    return clb.integrate_spectrum(f, y_int)
+    return clb.math.integrate_spectrum(f, y_int)
 
 
 iwv = np.zeros(len(atmospheres))

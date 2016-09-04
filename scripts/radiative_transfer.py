@@ -32,7 +32,7 @@ for atmosphere in fascod:
 
     # Calculations
     # maximal detection height based on clear-sky ARTS run.
-    lwr = clb.integrate_spectrum(f, iy)
+    lwr = clb.math.integrate_spectrum(f, iy)
 
     max_height = float(clb.estimate_cloud_height(lwr, T_s))
     print('Maximal detection height for {}: {:.0f}m'.format(atmosphere,

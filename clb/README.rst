@@ -34,10 +34,14 @@ clb.csv
 ^^^^^^^
 Load CSV files stored in Wettermast format.
 
+clb.math
+^^^^^^^^
+Mathematical functions.
+
+clb.physics
+^^^^^^^^^^^
+Physical functions.
+
 clb.plots
 ^^^^^^^^^
 Plot basic atmospheric properties conveniently.
-
-clb.retrieval
-^^^^^^^^^^^^^
-Retrieve the integrated water vapor path.
