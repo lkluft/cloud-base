@@ -100,6 +100,9 @@ sensorOff
 VectorCreate( temp )
 NumericCreate( z0 )
 IndexCreate( npos )
+MatrixSet( sensor_los, [0; 15; 30; 45; 60; 75; 85] )
+nrowsGet( npos, sensor_los )
+
 AgendaSet( ybatch_calc_agenda )
 {
     # Extract the atmospheric profiles for this case:
@@ -117,8 +120,6 @@ AgendaSet( ybatch_calc_agenda )
     Extract( z_surface, z_field, 0 )
     VectorExtractFromMatrix( temp, z_surface, 0, "row" )
     Extract( z0, temp, 0 )
-    MatrixSet( sensor_los, [0; 15; 30; 45; 60; 75; 85] )
-    nrowsGet( npos, sensor_los )
     MatrixSetConstant( sensor_pos, npos, 1, z0 )
 
 
@@ -137,4 +138,5 @@ ybatchCalc( robust=1 )
 
 WriteXML( "binary", f_grid, "f_grid.xml" )
 WriteXML( "binary", ybatch, "ybatch.xml" )
+WriteXML( "binary", sensor_los, "sensor_los.xml" )
 }

@@ -22,7 +22,7 @@ Copy( iy_space_agenda, iy_space_agenda__CosmicBackground )
 Copy( iy_surface_agenda, iy_surface_agenda__UseSurfaceRtprop )
 
 # on-the-fly absorption
-Copy( propmat_clearsky_agenda, propmat_clearsky_agenda__OnTheFly )
+Copy( propmat_clearsky_agenda, propmat_clearsky_agenda__LookUpTable )
 
 # sensor-only path
 Copy( ppath_agenda, ppath_agenda__FollowSensorLosPath )
@@ -46,26 +46,25 @@ abs_speciesSet( species=[ "H2O, H2O-SelfContCKDMT252, H2O-ForeignContCKDMT252",
                         ])
 abs_lines_per_speciesSetEmpty
 
-#Define Line shape
+# Define Line shape
 abs_lineshape_per_tgDefine( abs_lineshape, abs_species,
         ["Voigt_Kuntz6", "Voigt_Kuntz6", "Voigt_Kuntz6",
          "Voigt_Kuntz6", "Voigt_Kuntz6"],
         ["VVH", "VVH", "VVH", "VVH", "VVH"],
         [750e9, 750e9, 750e9, 750e9, 750e9] )
 
-# Read HITRAN catalog (needed for O3):
-abs_linesReadFromHitran(abs_lines,
-"/scratch/uni/u237/data/catalogue/hitran/hitran2012/HITRAN2012.par",
-                        1e12,
-                        70e12 )
+# The below lines are important to select frequency range and resolution.
+# Grid spacing and FWHM of the Gaussian response should match!
+VectorLinSpace( f_grid, 3e12, 66e12, 100e9 )
 
-abs_lines_per_speciesCreateFromLines
+# # Read HITRAN catalog (needed for O3):
+ReadXML( abs_lookup, "abs_lookup.xml" )
+abs_lookupAdapt
 
 # A pressure grid rougly matching 0 to 12 km
 VectorNLogSpace( p_grid, 100, 1000e2, 100e2 )
 
 # Atmospheric scenario
-# AtmRawRead( basename="testdata/tropical" )
 StringCreate( atmpath )
 GetEnvironmentVariable( atmpath, "ATMPATH")
 AtmRawRead(basename=atmpath)
@@ -76,7 +75,7 @@ Copy( surface_rtprop_agenda,
       surface_rtprop_agenda__Specular_NoPol_ReflFix_SurfTFromt_surface )
 
 
-# We select here to use Rayleigh-Jean brightness temperatures
+# We select here to use radiances.
 StringSet( iy_unit, "1" )
 
 # Atmosphere and surface
@@ -88,48 +87,33 @@ VectorCreate( dummy )
 VectorExtractFromMatrix( dummy, t_surface, 0, "row" )
 Extract(surface_skin_t, dummy, 0)
 
-# Perform RT calculations
-abs_xsec_agenda_checkedCalc
-propmat_clearsky_agenda_checkedCalc
-atmfields_checkedCalc
-atmgeom_checkedCalc
-cloudbox_checkedCalc
-
-# The below lines are important to select frequency range and resolution.
-# Grid spacing and FWHM of the Gaussian response should match!
-VectorLinSpace( f_grid, 3e12, 66e12, 100e9 )
-
 # Sensor off
 jacobianOff
 AntennaOff
 sensorOff
 
-# Opcacity
-ArrayOfStringSet( iy_aux_vars, ["Optical depth",
-                                "Absorption, summed",
-                                "Absorption, species 0",
-                                "Absorption, species 1",
-                                "Absorption, species 2",
-                                "Absorption, species 3",
-                                "Absorption, species 4"
-                                ])
+# Definition of sensor position and LOS
+VectorCreate( temp )
+VectorExtractFromMatrix( temp, z_surface, 0, "row" )
+NumericCreate( z0 )
+Extract( z0, temp, 0 )
+MatrixSet( sensor_los, [0; 10; 20; 30; 40; 50; 60; 70; 80] )
+IndexCreate( npos )
+nrowsGet( npos, sensor_los )
+MatrixSetConstant( sensor_pos, npos, 1, z0 )
 
-# Sensor position
-VectorCreate( z0 )
-VectorExtractFromMatrix( z0, z_surface, 0, "row" )
-Copy( rte_pos, z0 )
-VectorSet( rte_los, [0] )
-VectorSet( rte_pos2, [] )
+# Perform RT calculations
+abs_xsec_agenda_checkedCalc
+propmat_clearsky_agenda_checkedCalc
+atmfields_checkedCalc( bad_partition_functions_ok = 1 )
+atmgeom_checkedCalc
+cloudbox_checkedCalc
+sensor_checkedCalc
 
-# Starting the calculation
-iyCalc
+yCalc
 
 # Writing results
 WriteXML( "binary", f_grid, "f_grid.xml" )
-WriteXML( "binary", p_grid, "p_grid.xml" )
-WriteXML( "binary", iy, "iy.xml" )
-WriteXML( "binary", iy_aux, "iy_aux.xml" )
-WriteXML( "binary", abs_species, "abs_species.xml" )
-WriteXML( "binary", z_field, "z_field.xml"  )
-WriteXML( "binary", t_field, "t_field.xml"  )
+WriteXML( "binary", y, "y.xml" )
+WriteXML( "binary", sensor_los, "sensor_los.xml" )
 }

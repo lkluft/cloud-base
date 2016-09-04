@@ -53,10 +53,7 @@ abs_lineshape_per_tgDefine( abs_lineshape, abs_species,
         [750e9, 750e9, 750e9, 750e9, 750e9] )
 
 # Read HITRAN catalog (needed for O3):
-abs_linesReadFromHitran(abs_lines,
-"/scratch/uni/u237/data/catalogue/hitran/hitran2012/HITRAN2012.par",
-                        1e12,
-                        70e12 )
+abs_linesReadFromHitran(abs_lines, "HITRAN2012.par", 1e12, 70e12 )
 abs_lines_per_speciesCreateFromLines
 
 # A pressure grid rougly matching 0 to 12 km
@@ -71,7 +68,7 @@ Copy( surface_rtprop_agenda,
       surface_rtprop_agenda__Specular_NoPol_ReflFix_SurfTFromt_surface )
 
 
-# We select here to use Rayleigh-Jean brightness temperatures
+# We select here to use radiances.
 StringSet( iy_unit, "1" )
 
 # Atmosphere and surface
@@ -101,10 +98,9 @@ sensorOff
 
 # Gas absorption from lookup table
 atmfields_checkedCalc
-# abs_lines_per_speciesSetEmpty
 abs_xsec_agenda_checkedCalc
 abs_lookupSetupWide
 abs_lookupCalc
 
-WriteXML( output_file_format="binary", in=abs_lookup, filename="abs_lookup.xml" )
+WriteXML( "binary", abs_lookup, "abs_lookup.xml" )
 }
