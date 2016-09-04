@@ -1,14 +1,10 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""Estimate the cloud base height using measurements
-of longwave radiation and 2m temperature.
+"""Estimate the cloud base height using measurements of
+longwave radiation and 2m temperature.
+
 """
 import os
-
-import numpy as np
-import matplotlib
 import matplotlib.pyplot as plt
-
 import clb
 
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-"""Retrieve the integrate water vapor path (IWP) through longwave radiation
-measurements.
+"""Retrieve the integrate water vapor path (IWP)
+through longwave radiation measurements.
 
 """
 import clb

@@ -1,13 +1,6 @@
 # -*- coding: utf-8 -*-
-#
-# Copyright © 2016 Lukas Kluft <lukas.kluft@gmail.com>
-#
-# Distributed under terms of the MIT license.
-
+"""Plot an overview of shortwave and longwave radiation measurements.
 """
-
-"""
-import numpy as np
 import matplotlib.pyplot as plt
 from clb import csv, plots
 
