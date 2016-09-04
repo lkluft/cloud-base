@@ -29,23 +29,25 @@ def integrate_spectrum(f, B, factor=np.pi):
 
 
 def moving_average(x, y, N, mode='same'):
-    """Calculate running mean of given timeseries.
+    """Calculate running mean for given timeseries.
 
     Parameters:
         x (np.ndarray): x data.
         y (np.ndarray): y data.
         N (int): Window size.
-        mode (str): Convolve mode 'valid', 'same' or 'full'.
+        mode (str): Convolve mode 'valid' or 'same'.
 
     Returns:
         np.ndarray, np.ndarray: Adjusted x data, Averaged y data.
 
     """
-    #TODO: Get returned x array clear.
     if mode == 'valid':
-        x = x[N // 2:-N]
+        l, t = N//2, -N//2 + 1
+        x = x[l:t]
     elif mode == 'full':
-        x = np.insert(x, 0, x[0] * np.ones(np.ceil(N / 2)))
-        x = np.insert(x, -1, x[-1] * np.ones(np.floor(N / 2)))
+        raise Exception(
+            'Mode "full" is not supported to prevent boundary effects.'
+            'If you know what you are doing, use numpy.convolve to use'
+            'full mode.')
 
     return x, np.convolve(y, np.ones((N,)) / N, mode=mode)
