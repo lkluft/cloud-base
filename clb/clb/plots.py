@@ -27,9 +27,15 @@ def set_date_axis(ax=None, dateformat='%d.%m.'):
 def time_series(data, key, ylabel='', ax=None, **kwargs):
     """Create a basic timeseries plot.
 
+    Notes:
+        The passed dictionary is expected to store a np.ndarray containing date
+        and time information in matplotlib time format. This information has
+        to be accessible through the key 'MPLTIME'.
+
     Parameters:
-        date (np.array): Dates in matplotlib format.
-        data (np.array): Data array.
+        data (dict): Dictionary containing time and data.
+        key (str): Dictionary key of variable to plot.
+            If key is a list of keys, each element in plotted.
         ylabel (str): y label.
         ax (AxesSubplot): Matplotlib axes.
 
@@ -68,8 +74,7 @@ def plot_clb(data, key='CBH', detection_height=2300, ax=None, **kwargs):
     """Plot cloud base height time series.
 
     Parameters:
-        date (np.array): Dates in matplotlib format.
-        clb (np.array): Cloud base height.
+        data (dict): Dictionary containing time and data.
         detection_height (float): Maximal detection height.
         ax (AxesSubplot): Matplotlib axes.
 
@@ -104,8 +109,7 @@ def plot_lwr(data, key='L', ax=None, **kwargs):
     """Plot LWR time series.
 
     Parameters:
-        date (np.array): Dates in matplotlib format.
-        data (np.array): LWR data array.
+        data (dict): Dictionary containing time and data.
         ax (AxesSubplot): Matplotlib axes.
 
     Returns:
@@ -123,8 +127,7 @@ def plot_T_b(data, key='L', ax=None, **kwargs):
     """Plot brightness temperature time series.
 
     Parameters:
-        date (np.array): Dates in matplotlib format.
-        data (np.array): Brightness temperature data array with.
+        data (dict): Dictionary containing time and data.
         ax (AxesSubplot): Matplotlib axes.
 
     Returns:
