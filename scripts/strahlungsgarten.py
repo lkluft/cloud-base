@@ -20,23 +20,23 @@ fig, [ax1, ax2] = plt.subplots(2, 1, figsize=(10, 6.1))
 
 kwargs = {
     'G': {'label': r'Kurz $\downarrow$',
-          'color': 'darkblue',
+          'color': 'blue',
           'linestyle': 'solid',
           'ax': ax1,
           },
     'R': {'label': r'Kurz $\uparrow$',
-          'color': 'lightblue',
-          'linestyle': 'dashed',
+          'color': 'darkorange',
+          'linestyle': 'solid',
           'ax': ax1,
           },
     'L': {'label': r'Lang $\downarrow$',
-          'color': 'darkred',
+          'color': 'red',
           'linestyle': 'solid',
           'ax': ax2,
           },
     'E': {'label': r'Lang $\uparrow$',
-          'color': 'red',
-          'linestyle': 'dashed',
+          'color': 'darkgreen',
+          'linestyle': 'solid',
           'ax': ax2,
           }
 }
@@ -50,6 +50,8 @@ for key in variable_keys:
 
 for ax in [ax1, ax2]:
     ax.legend(ncol=2, fontsize='small')
+ax1.set_ylim(0, 1200)
+ax2.set_ylim(300, 520)
 
 fig.tight_layout()
 fig.savefig('plots/strahlungsgarten.pdf')
