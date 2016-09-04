@@ -9,7 +9,7 @@ import typhon.cm
 
 
 __all__ = ['set_date_axis',
-           'plot_time_series',
+           'time_series',
            'plot_clb',
            'plot_lwr',
            'plot_T_b',
@@ -24,7 +24,7 @@ def set_date_axis(ax=None, dateformat='%d.%m.'):
     ax.grid('on', which='both', linestyle='-')
 
 
-def plot_time_series(date, data, ylabel, ax=None, **kwargs):
+def time_series(data, key, ylabel='', ax=None, **kwargs):
     """Create a basic timeseries plot.
 
     Parameters:
@@ -37,10 +37,21 @@ def plot_time_series(date, data, ylabel, ax=None, **kwargs):
         Line2D: A line.
 
     """
+    if type(key) is list:
+        line = []
+        for k in key:
+            line.append(time_series(data, k, ylabel=ylabel, ax=ax, **kwargs))
+        return line
+
     if ax is None:
         ax = plt.gca()
 
-    line, = ax.plot(date, data, **kwargs)
+    if not 'label' in kwargs:
+        kwargs['label'] = key
+
+    date = data['MPLTIME']
+
+    line, = ax.plot(date, data[key], **kwargs)
 
     set_date_axis(ax)
 
@@ -48,11 +59,12 @@ def plot_time_series(date, data, ylabel, ax=None, **kwargs):
     ax.set_xticks(np.arange(np.floor(date.min()), np.ceil(date.max())))
     ax.set_xlabel('Datum')
     ax.set_ylabel(ylabel)
+    ax.legend()
 
     return line
 
 
-def plot_clb(date, clb, detection_height=2300, ax=None, **kwargs):
+def plot_clb(data, key='CBH', detection_height=2300, ax=None, **kwargs):
     """Plot cloud base height time series.
 
     Parameters:
@@ -64,30 +76,31 @@ def plot_clb(date, clb, detection_height=2300, ax=None, **kwargs):
     """
     ylabel = 'Höhe [m]'
 
-    line = plot_time_series(date, clb,
-                            ax=ax,
-                            ylabel=ylabel,
-                            color='darkorange',
-                            alpha=0.7,
-                            linewidth=2,
-                            label='Wolkenhöhe',
-                            **kwargs)
+    line = time_series(data, key,
+                       ax=ax,
+                       ylabel=ylabel,
+                       color='darkorange',
+                       alpha=0.7,
+                       linewidth=2,
+                       label='Wolkenhöhe',
+                       **kwargs)
 
-    plot_time_series(date, detection_height * np.ones(date.size),
-                     ax=ax,
-                     ylabel=ylabel,
-                     color='darkred',
-                     alpha=0.7,
-                     linewidth=2,
-                     linestyle='--',
-                     label='Max. Detektionshöhe')
+    data['DETECTION_HEIGHT'] = detection_height * np.ones(data['MPLTIME'].size)
+    time_series(data, 'DETECTION_HEIGHT',
+                ax=ax,
+                ylabel=ylabel,
+                color='darkred',
+                alpha=0.7,
+                linewidth=2,
+                linestyle='--',
+                label='Max. Detektionshöhe')
 
     ax.legend()
 
     return line
 
 
-def plot_lwr(date, lwr, ax=None, **kwargs):
+def plot_lwr(data, key='L', ax=None, **kwargs):
     """Plot LWR time series.
 
     Parameters:
@@ -101,12 +114,12 @@ def plot_lwr(date, lwr, ax=None, **kwargs):
     """
     ylabel = r'Langwellige Rückstrahlung [$W\,m^{-2}$]'
 
-    line = plot_time_series(date, lwr, ylabel, ax=ax, **kwargs)
+    line = time_series(data, key, ylabel, ax=ax, **kwargs)
 
     return line
 
 
-def plot_T_b(date, T_b, ax=None, **kwargs):
+def plot_T_b(data, key='L', ax=None, **kwargs):
     """Plot brightness temperature time series.
 
     Parameters:
@@ -119,9 +132,9 @@ def plot_T_b(date, T_b, ax=None, **kwargs):
 
     """
     ylabel = r'$\Delta T_B$ [K]'
-    color = 'DarkRed'
+    color = 'darkred'
 
-    line = plot_time_series(date, T_b, ylabel, ax=ax, color=color, **kwargs)
+    line = time_series(data, key, ylabel, ax=ax, color=color, **kwargs)
 
     return line
 

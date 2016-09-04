@@ -19,7 +19,7 @@ def main(mfilename, cfilename):
     z = data['CLB_MATRIX_Z']
     back_scat = data['CLB_MATRIX']
 
-    cloud_height = clb.estimate_cloud_height(lwr, T_s)
+    data['CBH'] = clb.estimate_cloud_height(lwr, T_s)
 
     try:
         plt.style.use('typhon')
@@ -28,17 +28,19 @@ def main(mfilename, cfilename):
 
     # LWR time series
     fig1, ax1 = plt.subplots(figsize=(20, 6))
-    clb.plots.plot_lwr(date, lwr, ax=ax1)
+    clb.plots.plot_lwr(data, ax=ax1)
 
     # brightness temperature time series
     fig2, ax2 = plt.subplots(figsize=(20, 6))
-    dT_b = clb.lwr_to_T_b(lwr) - clb.lwr_to_T_b(clb.lwr_surrounding(T_s))
-    clb.plots.plot_T_b(date, dT_b, ax=ax2)
+    data['T_B'] = (
+        clb.physics.irradiance2temperature(lwr) -
+        clb.physics.irradiance2temperature(clb.lwr_surrounding(T_s)))
+    clb.plots.plot_T_b(data, ax=ax2)
 
     # back scattering and CLB
     fig3, ax3 = plt.subplots(figsize=(20, 6))
     clb.plots.plot_back_scat(date, z, back_scat, ax=ax3)
-    clb.plots.plot_clb(date, cloud_height, ax=ax3)
+    clb.plots.plot_clb(data, ax=ax3)
 
     fig1.savefig(os.path.join('plots', 'lwr.pdf'))
     fig2.savefig(os.path.join('plots', 't_b.pdf'))
