@@ -31,13 +31,11 @@ Geräte nah am Horizont nicht sensitiv sind.
 | Datum      | Uhrzeit   | Eintrag                                            |
 | ---------- | --------- | -------------------------------------------------- |
 | 30.08.2016 | 15:15 Uhr | Das Pyranometer am Strahlungsgarten ist schief     |
-|            |           | befestigt.                                         |
-|            |           |                                                    |
+|            |           | befestigt.\                                        |
 |            |           | Der Schattenring ist schief.                       |
 | 30.08.2016 | 16:30 Uhr | Pyranometer und Schattenring neujustiert.          |
 | 01.09.2016 | 16:20 Uhr | Stromausfall.                                      |
 | 01.09.2016 | 16:35 Uhr | Stromversorgung wieder hergestellt.                |
-| 02.09.2016 | 08:53 Uhr | Tau vom Pyranometer am Schattenring entfernt.      |
-|            |           |                                                    |
+| 02.09.2016 | 08:53 Uhr | Tau vom Pyranometer am Schattenring entfernt.\     |
 |            |           | Schattenring nachgeführt (42, 42).                 |
 | 05.09.2016 | 10:40 Uhr | Schattenring nachgeführt (40, 40).                 |
