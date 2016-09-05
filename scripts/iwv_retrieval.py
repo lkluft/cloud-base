@@ -11,31 +11,10 @@ from scipy.optimize import curve_fit
 from typhon.arts import xml, atm_fields_compact_get
 
 
-atmospheres = xml.load('/home/lukas/arts-xml-data/planets/Earth/ECMWF/IFS/Chevallier_91L/chevallierl91_all_full.xml.gz')
+atmospheres = xml.load('/home/lukas/arts-xml-data/planets/Earth/ECMWF/IFS/Chevallier_91L/chevallierl91_all_q.xml')
 ybatch = xml.load('../arts/results/angles/ybatch.xml')
 f = xml.load('../arts/results/angles/f_grid.xml')
 los = xml.load('../arts/results/angles/sensor_los.xml')
-
-
-def integrate_angles(f, y_los, los, dtheta):
-    """Integrate spectrum over frequency and angles.
-
-    Parameters:
-        f: Frequency grid [Hz].
-        y_los: Concatenated spectra for all angles.
-        los: Viewing angles.
-        dtheta (float): Angle resolution.
-
-    Retuns:
-        Integrated spectrum [W/m**2].
-
-    """
-    y_int = np.zeros(f.size)
-    for y, a in zip(np.split(y_los, los.size), los):
-        # y_int += np.cos(np.deg2rad(a)) * y * np.sin(np.deg2rad(10))
-        y_int += (2 * np.pi * np.sin(np.deg2rad(a))
-                  * np.cos(np.deg2rad(a)) * y * np.deg2rad(dtheta))
-    return clb.math.integrate_spectrum(f, y_int, factor=1)
 
 
 iwv = np.zeros(len(atmospheres))
@@ -46,7 +25,7 @@ for i in range(len(atmospheres)):
         atmospheres[i])
     p = atmospheres[i].grids[1]
     iwv[i] = typhon.atmosphere.iwv(q.ravel(), p, T.ravel(), z.ravel())
-    lwr[i] = integrate_angles(f, ybatch[i], los)
+    lwr[i] = clb.math.integrate_angles(f, ybatch[i], los, dtheta=15)
 
 # IWP and LWR correlation (ARTS simulation)
 N, x, y = np.histogram2d(iwv, lwr, (25, 25))
@@ -102,6 +81,7 @@ lwr_mean = np.array([np.mean(x) for x in np.split(lwr, lwr.size/10)])
 
 iwv_rad = np.ma.masked_invalid(rad['RAD_IWV'])
 iwv_pyr = np.ma.masked_invalid(IWV(lwr_mean, *popt))
+offset = np.mean(iwv_pyr - iwv_rad)
 
 # Fit vs. measurements
 x = np.linspace(300, 420, 100)
@@ -119,6 +99,7 @@ data = {
     'MPLTIME': rad['MPLTIME'],
     'RAD_IWV': iwv_rad,
     'PYR_IWV': iwv_pyr,
+    'PYR_IWV_corrected': iwv_pyr - offset,
     }
 fig, ax = plt.subplots()
 clb.plots.time_series(data, 'RAD_IWV',
@@ -133,11 +114,24 @@ ax.legend()
 ax.set_ylim(0, 50)
 fig.savefig('plots/iwv_timeseries.pdf')
 
+fig, ax = plt.subplots()
+clb.plots.time_series(data, 'RAD_IWV',
+                      ylabel='Wasserdampfsäule [$kg\,m^{-2}$]',
+                      label='Radiometer',
+                      color='blue')
+clb.plots.time_series(data, 'PYR_IWV_corrected',
+                      ylabel='Wasserdampfsäule [$kg\,m^{-2}$]',
+                      label='Pyrgeometer - {:3.1f}'.format(offset),
+                      color='green')
+ax.legend()
+ax.set_ylim(0, 50)
+fig.savefig('plots/iwv_timeseries_corrected.pdf')
+
 # Correlation between fit and measurement.
 fig, ax = plt.subplots()
-x = y = np.linspace(0, 40, 25)
+x = y = np.linspace(0, 50, 25)
 ax.plot(x, y, linestyle='--', color='k', linewidth=1)
-N, x, y = np.histogram2d(iwv_rad, iwv_pyr, (x, y))
+N, x, y = np.histogram2d(iwv_rad, iwv_pyr - offset, (x, y))
 pcm = ax.pcolormesh(x, y, N.T, cmap='Greys')
 ax.set_ylabel('Pyrgeometer IWV [$kg\,m^{-2}$]')
 ax.set_xlabel('Radiometer IWV [$kg\,m{-2}$]')
