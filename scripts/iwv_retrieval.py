@@ -17,13 +17,14 @@ f = xml.load('../arts/results/angles/f_grid.xml')
 los = xml.load('../arts/results/angles/sensor_los.xml')
 
 
-def integrate_angles(f, y_los, los):
+def integrate_angles(f, y_los, los, dtheta):
     """Integrate spectrum over frequency and angles.
 
     Parameters:
         f: Frequency grid [Hz].
         y_los: Concatenated spectra for all angles.
         los: Viewing angles.
+        dtheta (float): Angle resolution.
 
     Retuns:
         Integrated spectrum [W/m**2].
@@ -31,8 +32,10 @@ def integrate_angles(f, y_los, los):
     """
     y_int = np.zeros(f.size)
     for y, a in zip(np.split(y_los, los.size), los):
-        y_int += np.cos(np.deg2rad(a)) * y * np.sin(np.deg2rad(10))
-    return clb.math.integrate_spectrum(f, y_int)
+        # y_int += np.cos(np.deg2rad(a)) * y * np.sin(np.deg2rad(10))
+        y_int += (2 * np.pi * np.sin(np.deg2rad(a))
+                  * np.cos(np.deg2rad(a)) * y * np.deg2rad(dtheta))
+    return clb.math.integrate_spectrum(f, y_int, factor=1)
 
 
 iwv = np.zeros(len(atmospheres))
@@ -115,7 +118,7 @@ fig.savefig('plots/messung_fit.pdf')
 data = {
     'MPLTIME': rad['MPLTIME'],
     'RAD_IWV': iwv_rad,
-    'PYR_IWV': iwv_pyr - 5,
+    'PYR_IWV': iwv_pyr,
     }
 fig, ax = plt.subplots()
 clb.plots.time_series(data, 'RAD_IWV',

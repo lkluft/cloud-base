@@ -100,7 +100,7 @@ sensorOff
 VectorCreate( temp )
 NumericCreate( z0 )
 IndexCreate( npos )
-MatrixSet( sensor_los, [0; 15; 30; 45; 60; 75; 85] )
+MatrixSet( sensor_los, [5; 20; 35; 50; 65; 80] )
 nrowsGet( npos, sensor_los )
 
 AgendaSet( ybatch_calc_agenda )
