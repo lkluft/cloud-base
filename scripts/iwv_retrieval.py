@@ -115,7 +115,7 @@ fig.savefig('plots/messung_fit.pdf')
 data = {
     'MPLTIME': rad['MPLTIME'],
     'RAD_IWV': iwv_rad,
-    'PYR_IWV': iwv_pyr,
+    'PYR_IWV': iwv_pyr - 5,
     }
 fig, ax = plt.subplots()
 clb.plots.time_series(data, 'RAD_IWV',
