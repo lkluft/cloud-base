@@ -112,15 +112,20 @@ ax.legend()
 fig.savefig('plots/messung_fit.pdf')
 
 # Timeseries
+data = {
+    'MPLTIME': rad['MPLTIME'],
+    'RAD_IWV': iwv_rad,
+    'PYR_IWV': iwv_pyr,
+    }
 fig, ax = plt.subplots()
-clb.plots.plot_time_series(rad['MPLTIME'], iwv_rad,
-                           ylabel='Wasserdampfsäule [$kg\,m^{-2}$]',
-                           label='Radiometer',
-                           color='blue')
-clb.plots.plot_time_series(rad['MPLTIME'], iwv_pyr,
-                           ylabel='Wasserdampfsäule [$kg\,m^{-2}$]',
-                           label='Pyrgeometer',
-                           color='red')
+clb.plots.time_series(data, 'RAD_IWV',
+                      ylabel='Wasserdampfsäule [$kg\,m^{-2}$]',
+                      label='Radiometer',
+                      color='blue')
+clb.plots.time_series(data, 'PYR_IWV',
+                      ylabel='Wasserdampfsäule [$kg\,m^{-2}$]',
+                      label='Pyrgeometer',
+                      color='red')
 ax.legend()
 ax.set_ylim(0, 50)
 fig.savefig('plots/iwv_timeseries.pdf')

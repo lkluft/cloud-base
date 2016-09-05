@@ -35,11 +35,12 @@ kwargs = {
 }
 
 for key in variable_keys:
-    plots.plot_time_series(data['MPLTIME'], data[key],
-                           ylabel=r'$W\,m^{-2}$',
-                           linewidth=2,
-                           **kwargs[key]
-                           )
+    plots.time_series(
+        data, key,
+        ylabel=r'$W\,m^{-2}$',
+        linewidth=2,
+        **kwargs[key]
+        )
 
 for ax in [ax1, ax2]:
     ax.legend(ncol=2, fontsize='small')
