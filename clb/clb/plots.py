@@ -52,7 +52,7 @@ def time_series(data, key, ylabel='', ax=None, **kwargs):
     if ax is None:
         ax = plt.gca()
 
-    if not 'label' in kwargs:
+    if 'label' not in kwargs:
         kwargs['label'] = key
 
     date = data['MPLTIME']

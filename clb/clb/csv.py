@@ -67,12 +67,13 @@ def _get_dtype(variable):
     return dtype
 
 
-def read(filename, variables=None, output=None):
+def read(filename, variables=None, stack=True, output=None):
     """Read CSV files.
 
     Parameters:
         filename (str): Path to CSV file.
         variables (List[str]): List of variables to extract.
+        stack (bool): Stack dict entries if key already exists.
         output (dict): Dictionary that is updated with read data.
 
     Returns:
@@ -104,17 +105,24 @@ def read(filename, variables=None, output=None):
         output = {var: data[var] for var in variables}
     else:
         for var in variables:
-            output[var] = data[var]
+            if stack is True and var in output:
+                output[var] = np.hstack((output[var], data[var]))
+            else:
+                output[var] = data[var]
 
     # Always convert DATE and TIME into matplotlib time.
     dates = [' '.join(d) for d in zip(data['DATE'], data['TIME'])]
-    output['MPLTIME'] = _get_mpl_date(dates)
+    if stack is True and 'MPLTIME' in output:
+        output['MPLTIME'] = np.hstack(
+                                (output['MPLTIME'], _get_mpl_date(dates)))
+    else:
+        output['MPLTIME'] = _get_mpl_date(dates)
 
     return output
 
 
 def read_profile(filename, dz=10, var_regex=None, var_key='PROFILE',
-                 output=None):
+                 stack=True, output=None):
     """Read scattering coefficients from CSV file.
 
     Parameters:
@@ -132,7 +140,7 @@ def read_profile(filename, dz=10, var_regex=None, var_key='PROFILE',
 
     """
 
-    output = read(filename, output=output)
+    output = read(filename, stack=stack, output=output)
 
     p = re.compile(var_regex)
 
