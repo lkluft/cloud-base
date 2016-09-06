@@ -7,6 +7,7 @@ import numpy as np
 __all__ = ['integrate_spectrum',
            'integrate_angles',
            'moving_average',
+           'block_average',
            'bootstrap',
            ]
 
@@ -74,6 +75,21 @@ def moving_average(x, y, N, mode='same'):
             'full mode.')
 
     return x, np.convolve(y, np.ones((N,)) / N, mode=mode)
+
+
+def block_average(x, y, N):
+    """Calculate the average over the last N values in y.
+
+    Parameters:
+        x (np.ndarray): x data.
+        y (np.ndarray): y dat.
+        N (int): Window size to average.
+
+    Returns:
+        np.ndarray, np.ndarray: Every n-th x value, Corresponding averages.
+
+    """
+    return x[N-1::N], np.array([np.nanmean(v) for v in np.split(y, y.size / N)])
 
 
 def bootstrap(x, size=None):
