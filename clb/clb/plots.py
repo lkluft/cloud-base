@@ -24,7 +24,7 @@ def set_date_axis(ax=None, dateformat='%d.%m.'):
     ax.grid('on', which='both', linestyle='-')
 
 
-def time_series(data, key, ylabel='', ax=None, **kwargs):
+def time_series(data, key, ylabel='', nticks=10, ax=None, **kwargs):
     """Create a basic timeseries plot.
 
     Notes:
@@ -37,6 +37,7 @@ def time_series(data, key, ylabel='', ax=None, **kwargs):
         key (str): Dictionary key of variable to plot.
             If key is a list of keys, each element in plotted.
         ylabel (str): y label.
+        nticks (int): Maximum number of xticks.
         ax (AxesSubplot): Matplotlib axes.
 
     Returns:
@@ -62,7 +63,11 @@ def time_series(data, key, ylabel='', ax=None, **kwargs):
     set_date_axis(ax)
 
     ax.set_xlim(date.min(), date.max())
-    ax.set_xticks(np.arange(np.floor(date.min()), np.ceil(date.max())))
+    xticks = np.arange(np.floor(date.min()), np.ceil(date.max()))
+    # TODO: Sometimes `nticks + 1` labels are generated.
+    if xticks.size > nticks:
+        ax.xaxis.set_minor_locator(mpl.ticker.FixedLocator(xticks))
+        ax.set_xticks(xticks[::xticks.size//nticks])
     ax.set_xlabel('Datum')
     ax.set_ylabel(ylabel)
     ax.legend()

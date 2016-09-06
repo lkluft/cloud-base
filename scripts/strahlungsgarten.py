@@ -4,7 +4,9 @@
 import matplotlib.pyplot as plt
 from clb import csv, plots
 
-data = csv.read('data/MASTER.txt')
+data = {}
+for week in [34, 35, 36]:
+    csv.read('data/{}/MASTER.txt'.format(week), output=data)
 
 variable_keys = ['G', 'R', 'L', 'E']
 
