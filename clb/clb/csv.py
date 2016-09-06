@@ -67,13 +67,16 @@ def _get_dtype(variable):
     return dtype
 
 
-def read(filename, variables=None, stack=True, output=None):
+def read(filename, variables=None, stack=True,
+         exclude_stack=None, output=None):
     """Read CSV files.
 
     Parameters:
         filename (str): Path to CSV file.
         variables (List[str]): List of variables to extract.
         stack (bool): Stack dict entries if key already exists.
+        exclude_stack (list[str]): Variables that should not be stacked
+            (e.g.  'PROFILE_Z').
         output (dict): Dictionary that is updated with read data.
 
     Returns:
@@ -90,6 +93,10 @@ def read(filename, variables=None, stack=True, output=None):
         variables = names.split(',')
         usecols = None
 
+    # Do not read MPLTIME. It is generated automatically.
+    if 'MPLTIME' in variables:
+        variables.remove('MPLTIME')
+
     with open(filename, 'rb') as f:
         data = np.genfromtxt(
             f,
@@ -105,14 +112,15 @@ def read(filename, variables=None, stack=True, output=None):
         output = {var: data[var] for var in variables}
     else:
         for var in variables:
-            if stack is True and var in output:
+            if stack is True and var in output and var not in exclude_stack:
                 output[var] = np.hstack((output[var], data[var]))
             else:
                 output[var] = data[var]
 
     # Always convert DATE and TIME into matplotlib time.
     dates = [' '.join(d) for d in zip(data['DATE'], data['TIME'])]
-    if stack is True and 'MPLTIME' in output:
+    if (stack and 'MPLTIME' in output and 'MPLTIME' not in exclude_stack):
+        # Only stack MPLTIME if it is already there and not permitted.
         output['MPLTIME'] = np.hstack(
                                 (output['MPLTIME'], _get_mpl_date(dates)))
     else:
@@ -122,7 +130,7 @@ def read(filename, variables=None, stack=True, output=None):
 
 
 def read_profile(filename, dz=10, var_regex=None, var_key='PROFILE',
-                 stack=True, output=None):
+                 stack=True, exclude_stack=None, output=None):
     """Read scattering coefficients from CSV file.
 
     Parameters:
@@ -139,8 +147,19 @@ def read_profile(filename, dz=10, var_regex=None, var_key='PROFILE',
         np.ndarray: Profile.
 
     """
+    profile_key = var_key + '_Z'
 
-    output = read(filename, stack=stack, output=output)
+    if exclude_stack is None:
+        exclude_stack = []
+
+    exclude_stack.append(profile_key)
+
+    output = read(
+        filename,
+        stack=stack,
+        exclude_stack=exclude_stack,
+        output=output,
+        )
 
     p = re.compile(var_regex)
 
@@ -153,7 +172,7 @@ def read_profile(filename, dz=10, var_regex=None, var_key='PROFILE',
 
     # Extract height information from variable name.
     output[var_key] = np.ma.masked_invalid(profile)
-    output[var_key + '_Z'] = np.array(z)
+    output[profile_key] = np.array(z)
 
     return output
 
@@ -206,7 +225,13 @@ def write_dict(filename, data, variables=None):
                 variables.remove(k)
                 variables.insert(0, k)
 
-    header = ";".join(variables)
+    header = '$Names=' + ";".join(variables)
     data = np.vstack(data[v] for v in variables).T
 
-    np.savetxt(filename, data, delimiter=';', header=header, fmt='%s')
+    np.savetxt(
+            filename,
+            data,
+            comments='',
+            delimiter=';',
+            header=header,
+            fmt='%s')
