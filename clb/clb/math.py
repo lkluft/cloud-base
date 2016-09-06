@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Mathematical functions.
 """
+import collections
 import numpy as np
 
 
@@ -9,6 +10,8 @@ __all__ = ['integrate_spectrum',
            'moving_average',
            'block_average',
            'bootstrap',
+           'correlation',
+           'rmse',
            ]
 
 
@@ -89,7 +92,10 @@ def block_average(x, y, N):
         np.ndarray, np.ndarray: Every n-th x value, Corresponding averages.
 
     """
-    return x[N-1::N], np.array([np.nanmean(v) for v in np.split(y, y.size / N)])
+    x = x[N-1::N]
+    y = np.array([np.nanmean(v) for v in np.split(y, y.size / N)])
+
+    return x, y
 
 
 def bootstrap(x, size=None):
@@ -112,3 +118,73 @@ def bootstrap(x, size=None):
 
     """
     return np.random.choice(x, size=size, replace=True)
+
+
+def rmse(x, y):
+    """Calculate the Root Mean Squared Error.
+
+    Parameters:
+        x (np.ndarray): Fist data array.
+        y (np.ndarray): Second data array.
+
+    Returns:
+        float: RMSE
+
+    """
+    return np.sqrt(np.nanmean((x - y)**2))
+
+
+def correlation(x, y):
+    """Return single correlatin coefficient.
+
+    Parameters:
+        x (np.ndarray): Fist data array.
+        y (np.ndarray): Second data array.
+
+    Returns:
+        float: Correlation coefficient.
+
+    """
+    x = np.ma.masked_invalid(x)
+    y = np.ma.masked_invalid(y)
+    return np.ma.corrcoef(x, y)[0, 1]
+
+
+def compare_arrays(x, y, verbose=False):
+    """Perform a simple statistic comparison of two arrays.
+
+    Parameters:
+        x (np.ndarray): Fist data array.
+        y (np.ndarray): Second data array.
+        verbose (bool): Print output.
+
+    Returns:
+        float: Correlation coefficient.
+
+    """
+
+    ArrayComparison = collections.namedtuple(
+        'ArrayComparison',
+        ['rmse',
+         'corrcoef',
+         'mean_first',
+         'mean_second',
+         ])
+
+    stats = ArrayComparison(
+        rmse=rmse(x, y),
+        corrcoef=correlation(x, y),
+        mean_first=np.nanmean(x),
+        mean_second=np.nanmean(y),
+        )
+
+    if verbose:
+        print(
+            'RMSE: {:5.3f}\n'
+            'Correlation: {:5.3f}\n'
+            'First Array Mean: {:5.3f}\n'
+            'Second Array Mean: {:5.3f}\n'
+            .format(*stats)
+            )
+
+    return stats
