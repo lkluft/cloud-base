@@ -14,6 +14,7 @@ __all__ = ['set_date_axis',
            'plot_lwr',
            'plot_T_b',
            'plot_back_scat',
+           'heatmap',
            ]
 
 
@@ -179,3 +180,26 @@ def plot_back_scat(date, z, back_scat, ax=None):
     cb.set_label('Rückstreuintensität')
 
     return pcm, cb
+
+
+def heatmap(x, y, nbins=(10, 10), cmap='cubehelix_r',
+            rasterized=True, ax=None, **kwargs):
+    """Plot a heatmap of given data.
+
+    Parameters:
+        x (np.ndarray): x data.
+        y (np.ndarray): y data.
+        nbins (tuple[int]): Number of bins in both dimensions.
+        ax (AxesSubplot, optional): Axes to plot in.
+
+    Returns:
+        N, xedges, yedges, AxesImage
+
+    """
+    if ax is None:
+        ax = plt.gca()
+
+    ret = ax.hist2d(
+        x, y, nbins, cmap=cmap, rasterized=rasterized, **kwargs)
+
+    return ret
