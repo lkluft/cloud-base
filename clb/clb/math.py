@@ -7,6 +7,7 @@ import numpy as np
 __all__ = ['integrate_spectrum',
            'integrate_angles',
            'moving_average',
+           'bootstrap',
            ]
 
 
@@ -73,3 +74,25 @@ def moving_average(x, y, N, mode='same'):
             'full mode.')
 
     return x, np.convolve(y, np.ones((N,)) / N, mode=mode)
+
+
+def bootstrap(x, size=None):
+    """Generate a bootstrap of given size from x.
+
+    Note:
+        This function is a simple wrapper for np.random.choice
+
+    Parameters:
+        a (1-D array-like or int):
+            If an ndarray, a random sample is generated from its elements.
+            If an int, the random sample is generated as if a was np.arange(n)
+        size (int or tuple of ints): Output shape.
+            If the given shape is, e.g., ``(m, n, k)``, then
+            ``m * n * k`` samples are drawn.  Default is None, in which case a
+            single value is returned.
+
+    Returns:
+        np.ndarray, shape (size,): The generated random samples.
+
+    """
+    return np.random.choice(x, size=size, replace=True)
