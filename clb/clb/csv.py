@@ -67,6 +67,9 @@ def _get_dtype(variable):
     return dtype
 
 
+#TODO: The whole stacking functionality is extremely buggy. There are a lot of
+# cases where stacking should not be done (e.g. height levels). Currently there
+# is no proper way to avoid this.
 def read(filename, variables=None, stack=True,
          exclude_stack=None, output=None):
     """Read CSV files.
@@ -92,6 +95,9 @@ def read(filename, variables=None, stack=True,
     else:
         variables = names.split(',')
         usecols = None
+
+    if exclude_stack is None:
+        exclude_stack = []
 
     # Do not read MPLTIME. It is generated automatically.
     if 'MPLTIME' in variables:
@@ -119,7 +125,7 @@ def read(filename, variables=None, stack=True,
 
     # Always convert DATE and TIME into matplotlib time.
     dates = [' '.join(d) for d in zip(data['DATE'], data['TIME'])]
-    if (stack and 'MPLTIME' in output and 'MPLTIME' not in exclude_stack):
+    if (stack and 'MPLTIME' in output):
         # Only stack MPLTIME if it is already there and not permitted.
         output['MPLTIME'] = np.hstack(
                                 (output['MPLTIME'], _get_mpl_date(dates)))
