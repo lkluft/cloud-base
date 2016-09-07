@@ -38,8 +38,8 @@ verwendet werden kann.
 ![IWV time series](/doc/figures/iwv_timeseries_corrected.png)
 
 # Dokumentation
-* [Abstract (Draft)](doc/LEX2016_Wolkenhoehe.pdf)
-* [Präsentation des Projektes](doc/LEX2016_Wolkenhoehe_Praesentation.pdf)
+* [Abstract (Draft)](doc/LEX2016_Pyrgeometer.pdf)
+* [Präsentation des Projektes](doc/LEX2016_Pyrgeometer_Praesentation.pdf)
 
 # Weiterführende Links
 
