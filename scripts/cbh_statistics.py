@@ -106,6 +106,45 @@ for i, ax in enumerate(axes.ravel()):
 fig.tight_layout()
 fig.savefig('plots/cbh_cloud_height.pdf')
 
+# Calculate and plot the full correltion matrix
+cloud_cover = np.arange(1, 9)
+cloud_heights = np.linspace(0, 6000, 9)
+corr = np.zeros((cloud_cover.size, cloud_heights.size - 1))
+
+for j, cc in enumerate(cloud_cover):
+    for i in range(cloud_heights.size - 1):    
+        lm1 = np.logical_and(np.ma.greater_equal(data['CL_SCBG'], cc),
+                          np.ma.less(data['CL_SCBG'], cc + 1))
+
+        lm2 = np.logical_and(
+                np.ma.greater(data['CL_WBU'], cloud_heights[i]),
+                np.ma.less_equal(data['CL_WBU'], cloud_heights[i + 1])
+                )
+        
+        mask = np.logical_and(lm1, lm2)        
+        
+        # Require at lest 20 matches.
+        if np.sum(mask) > 20:        
+            sts = clb.math.compare_arrays(data['CL_WBU'][mask],
+                                      data['PYR_CBH'][mask])
+
+            corr[j, i] = sts.corrcoef 
+        else:
+            corr[j, i] = np.nan
+
+fig, ax = plt.subplots()
+pcm = ax.pcolormesh(np.arange(0, 9),
+                    cloud_heights[::-1],
+                    np.ma.masked_invalid(corr),
+                    cmap=plt.get_cmap('difference', 15),
+                    vmin=-1,
+                    vmax=1,
+                    rasterized=True)
+ax.set_xlabel(r'Bedeckung [Achtel]')
+ax.set_ylabel('Wolkenhöhe [m]')
+fig.colorbar(pcm, label='Korrelation')
+fig.savefig('plots/cbh_correlation_matrix.pdf')
+
 # Statistics of both time series
 sts = clb.math.compare_arrays(data['CL_WBU'], data['PYR_CBH'], verbose=True)
 
@@ -128,7 +167,7 @@ xedges = yedges = np.arange(0, 4000, 300)
 N, x, y, img = ax.hist2d(data['CL_WBU'],
                          data['PYR_CBH'],
                          (xedges, yedges),
-                         cmap=plt.get_cmap('cubehelix', 10))
+                         cmap=plt.get_cmap('Greys', 10))
 ax.plot(x, y, color='r', linestyle='dashed')
 ax.set_title('RMSE = {:.0f}m,r = {:.2f}'.format(sts.rmse, sts.corrcoef))
 ax.set_xlabel('Ceilometer CBH [m]')
