@@ -38,3 +38,6 @@ Geräte nah am Horizont nicht sensitiv sind.
 | 02.09.2016 | 08:53 Uhr | Tau vom Pyranometer am Schattenring entfernt.      |
 |            |           | Schattenring nachgeführt (42, 42).                 |
 | 05.09.2016 | 10:40 Uhr | Schattenring nachgeführt (40, 40).                 |
+| 07.09.2016 | 08:50 Uhr | Schattenring nachgeführt (37, 37).                 |
+| 07.09.2016 | 18:25 Uhr | Beide Pyrgeometer nach oben gerichtet (Kalibr.).   |
+| 08.09.2016 | 09:35 Uhr | Beide Pyrgeometer nach unten gerichtet (Kalibr.).  |
