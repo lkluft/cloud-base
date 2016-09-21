@@ -4,7 +4,9 @@ longwave radiation and 2m temperature.
 
 """
 import os
+import matplotlib as mpl
 import matplotlib.pyplot as plt
+import typhon.plots
 import clb
 
 
@@ -21,10 +23,7 @@ def main(mfilename, cfilename):
 
     data['CBH'] = clb.estimate_cloud_height(lwr, T_s)
 
-    try:
-        plt.style.use('typhon')
-    except:
-        plt.style.use('seaborn-poster')
+    plt.style.use(typhon.plots.styles('typhon'))
 
     # LWR time series
     fig1, ax1 = plt.subplots(figsize=(20, 6))
@@ -45,6 +44,7 @@ def main(mfilename, cfilename):
     fig1.savefig(os.path.join('plots', 'lwr.pdf'))
     fig2.savefig(os.path.join('plots', 't_b.pdf'))
     fig3.savefig(os.path.join('plots', 'clb.pdf'), dpi=600)
+    fig3.savefig(os.path.join('plots', 'clb.svg'), dpi=600)
 
 if __name__ == '__main__':
-    main('data/MASTER.txt', 'data/CLB.txt')
+    main('data/35/MASTER.txt', 'data/35/CLB.txt')

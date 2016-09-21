@@ -12,6 +12,7 @@ __all__ = ['integrate_spectrum',
            'bootstrap',
            'correlation',
            'rmse',
+           'compare_arrays',
            ]
 
 
@@ -124,7 +125,7 @@ def rmse(x, y):
     """Calculate the Root Mean Squared Error.
 
     Parameters:
-        x (np.ndarray): Fist data array.
+        x (np.ndarray): First data array.
         y (np.ndarray): Second data array.
 
     Returns:
@@ -138,7 +139,7 @@ def correlation(x, y):
     """Return single correlatin coefficient.
 
     Parameters:
-        x (np.ndarray): Fist data array.
+        x (np.ndarray): First data array.
         y (np.ndarray): Second data array.
 
     Returns:
@@ -154,7 +155,7 @@ def compare_arrays(x, y, verbose=False):
     """Perform a simple statistic comparison of two arrays.
 
     Parameters:
-        x (np.ndarray): Fist data array.
+        x (np.ndarray): First data array.
         y (np.ndarray): Second data array.
         verbose (bool): Print output.
 

@@ -93,18 +93,18 @@ def plot_clb(data, key='CBH', detection_height=2300, ax=None, **kwargs):
                        color='darkorange',
                        alpha=0.7,
                        linewidth=2,
-                       label='Wolkenhöhe',
+                       label='Wolkenhöhe Pyrgeometer',
                        **kwargs)
 
-    data['DETECTION_HEIGHT'] = detection_height * np.ones(data['MPLTIME'].size)
-    time_series(data, 'DETECTION_HEIGHT',
-                ax=ax,
-                ylabel=ylabel,
-                color='darkred',
-                alpha=0.7,
-                linewidth=2,
-                linestyle='--',
-                label='Max. Detektionshöhe')
+    # data['DETECTION_HEIGHT'] = detection_height * np.ones(data['MPLTIME'].size)
+    # time_series(data, 'DETECTION_HEIGHT',
+    #             ax=ax,
+    #             ylabel=ylabel,
+    #             color='darkred',
+    #             alpha=0.7,
+    #             linewidth=2,
+    #             linestyle='--',
+    #             label='Max. Detektionshöhe')
 
     ax.legend()
 
@@ -165,7 +165,7 @@ def plot_back_scat(date, z, back_scat, ax=None):
         ax = plt.gca()
 
     pcm = ax.pcolormesh(date, z, back_scat,
-                        cmap=plt.get_cmap('density', lut=10),
+                        cmap=plt.get_cmap('density', lut=8),
                         vmin=0,
                         vmax=400,
                         rasterized=True)

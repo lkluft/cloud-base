@@ -8,6 +8,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 from typhon.arts import xml, atm_fields_compact_get
+from typhon.plots import styles
 
 
 atmospheres = xml.load('data/chevallierl91_all_q.xml')
@@ -32,11 +33,11 @@ for i in range(len(atmospheres)):
 #    iwv[i] = typhon.atmosphere.iwv(q.ravel(), p, T.ravel(), z.ravel())
 #    t_s[i] = T[0]
 #    lwr[i] = clb.math.integrate_angles(f, ybatch[i], los, dtheta=15)
-    if T[0] > 283.15 and p[0] > 95000:    
+    if T[0] > 283.15 and p[0] > 95000:
         iwv.append(typhon.atmosphere.iwv(q.ravel(), p, T.ravel(), z.ravel()))
         t_s.append(float(T[0]))
         lwr.append(clb.math.integrate_angles(f, ybatch[i], los, dtheta=15))
-    
+
 iwv = np.array(iwv)
 t_s = np.array(t_s)
 lwr = np.array(lwr)
@@ -44,7 +45,7 @@ lwr = np.array(lwr)
 # IWP and LWR correlation (ARTS simulation)
 N, x, y = np.histogram2d(iwv, lwr, (25, 25))
 
-plt.style.use('typhon')
+plt.style.use(styles('typhon'))
 
 fig, ax = plt.subplots()
 pcm = ax.pcolormesh(x, y, N.T,
@@ -132,18 +133,21 @@ data = {
 
 clb.csv.write_dict('data/iwv.txt', data)
 
-fig, ax = plt.subplots()
+fig, ax = plt.subplots(figsize=(20, 8))
 clb.plots.time_series(data, 'RAD_IWV',
                       ylabel='Wasserdampfsäule [$kg\,m^{-2}$]',
+                      linewidth=4,
                       label='Radiometer',
                       color='darkblue')
 clb.plots.time_series(data, 'PYR_IWV',
                       ylabel='Wasserdampfsäule [$kg\,m^{-2}$]',
+                      linewidth=4,
                       label='Pyrgeometer',
                       color='darkorange')
 ax.legend()
 ax.set_ylim(0, 50)
 fig.savefig('plots/iwv_timeseries.pdf')
+fig.savefig('plots/iwv_timeseries.svg')
 
 fig, ax = plt.subplots()
 clb.plots.time_series(data, 'RAD_IWV',
@@ -165,11 +169,11 @@ st_c = clb.math.compare_arrays(iwv_rad, iwv_pyr - offset, verbose=True)
 fig, ax = plt.subplots()
 x = y = np.linspace(0, 50, 25)
 ax.plot(x, y, linestyle='--', color='k', linewidth=1)
-N, x, y = np.histogram2d(iwv_rad, iwv_pyr - offset, (x, y))
-pcm = ax.pcolormesh(x, y, N.T, cmap=plt.get_cmap('Greys', 10))
+N, x, y = np.histogram2d(iwv_rad, iwv_pyr, (x, y))
+pcm = ax.pcolormesh(x, y, N.T, cmap=plt.get_cmap('Greys', 8))
 ax.set_ylabel('Pyrgeometer IWV [$kg\,m^{-2}$]')
-ax.set_xlabel('Radiometer IWV [$kg\,m{-2}$]')
+ax.set_xlabel('Radiometer IWV [$kg\,m^{-2}$]')
 ax.set_aspect('equal')
-ax.set_title('r = {:.3f}'.format(st_c.corrcoef))
+# ax.set_title('r = {:.3f}'.format(st_c.corrcoef))
 fig.colorbar(pcm, label='Anzahl')
 fig.savefig('plots/iwv_fit_correlation.pdf')

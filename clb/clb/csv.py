@@ -99,10 +99,6 @@ def read(filename, variables=None, stack=True,
     if exclude_stack is None:
         exclude_stack = []
 
-    # Do not read MPLTIME. It is generated automatically.
-    if 'MPLTIME' in variables:
-        variables.remove('MPLTIME')
-
     with open(filename, 'rb') as f:
         data = np.genfromtxt(
             f,
@@ -125,10 +121,10 @@ def read(filename, variables=None, stack=True,
 
     # Always convert DATE and TIME into matplotlib time.
     dates = [' '.join(d) for d in zip(data['DATE'], data['TIME'])]
-    if (stack and 'MPLTIME' in output):
+    if (stack and 'MPLTIME' in output and 'MPLTIME' not in exclude_stack):
         # Only stack MPLTIME if it is already there and not permitted.
         output['MPLTIME'] = np.hstack(
-                                (output['MPLTIME'], _get_mpl_date(dates)))
+            (output['MPLTIME'], _get_mpl_date(dates)))
     else:
         output['MPLTIME'] = _get_mpl_date(dates)
 
@@ -202,6 +198,7 @@ def read_scat(filename, var_regex='CLB_B\d{5}', output=None):
 
     output = read_profile(
         filename,
+        stack=False,
         var_key='CLB_MATRIX',
         var_regex=var_regex,
         output=output)
