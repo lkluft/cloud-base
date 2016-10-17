@@ -93,7 +93,7 @@ def plot_clb(data, key='CBH', detection_height=2300, ax=None, **kwargs):
                        color='darkorange',
                        alpha=0.7,
                        linewidth=2,
-                       label='Wolkenhöhe Pyrgeometer',
+                       label='Abgeleitete Wolkenhöhe',
                        **kwargs)
 
     # data['DETECTION_HEIGHT'] = detection_height * np.ones(data['MPLTIME'].size)
@@ -177,7 +177,7 @@ def plot_back_scat(date, z, back_scat, ax=None):
 
     cb = ax.get_figure().colorbar(pcm)
     cb.set_ticks(np.arange(0, 401, 100))
-    cb.set_label('Rückstreuintensität')
+    cb.set_label('Rückstreuintensität des Ceilometers')
 
     return pcm, cb
 

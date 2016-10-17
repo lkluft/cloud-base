@@ -49,9 +49,9 @@ plt.style.use(styles('typhon'))
 
 fig, ax = plt.subplots()
 pcm = ax.pcolormesh(x, y, N.T,
-                    cmap=plt.get_cmap('cubehelix_r'),
+                    cmap=plt.get_cmap('cubehelix_r', 8),
                     rasterized=True)
-ax.set_title('r = {:.3f}'.format(np.corrcoef(iwv, lwr)[0, 1]))
+# ax.set_title('r = {:.3f}'.format(np.corrcoef(iwv, lwr)[0, 1]))
 ax.set_xlim(0, x.max())
 ax.set_ylim(y.min(), y.max())
 ax.set_ylabel(r'Langwellige Einstrahlung [$Wm^{-2}$]')

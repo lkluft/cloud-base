@@ -35,11 +35,11 @@ ARTS [0] zu genauer zu quantifizieren. Die gewonnen Daten werden verwendet, um
 eine Funktion anzunähern, die zu Bestimmung des IWV aus einfachen Messdaten
 verwendet werden kann.
 
-![IWV fit correlation](/doc/figures/iwv_fit_correlation.png)
+![IWV fit correlation](/doc/abstract/figures/iwv_fit_correlation.png)
 
 # Dokumentation
-* [Extended Abstract (Draft)](doc/abstract/LEX2016_Pyrgeometer.pdf)
-* [Poster](doc/poster/LEX2016_Pyrgeometer.pdf)
+* [Extended Abstract (Draft)](doc/abstract/LEX2016_Pyrgeometer_Abstract.pdf)
+* [Poster](doc/poster/LEX2016_Pyrgeometer_Poster.pdf)
 * [Präsentation des Projektes](doc/presentation/LEX2016_Pyrgeometer_Praesentation.pdf)
 
 # Weiterführende Links
