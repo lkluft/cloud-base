@@ -20,7 +20,7 @@ ab. Aus diesem Grund liefern tiefe Wolken ein stärkeres (wärmeres) Signal in
 der langwelligen Einstrahlung. Diese Information kann unter Annahme
 eines Temperaturegradienten in eine Höhe umgerechnet werden.
 
-![Ceilometer profile time series](/doc/figures/ceilometer.png)
+![Ceilometer profile time series](/doc/presentation/figures/ceilometer.png)
 
 # Bestimmung des integrierten Wasserdampfgehaltes
 
@@ -35,11 +35,12 @@ ARTS [0] zu genauer zu quantifizieren. Die gewonnen Daten werden verwendet, um
 eine Funktion anzunähern, die zu Bestimmung des IWV aus einfachen Messdaten
 verwendet werden kann.
 
-![IWV time series](/doc/figures/iwv_timeseries_corrected.png)
+![IWV fit correlation](/doc/figures/iwv_fit_correlation.png)
 
 # Dokumentation
-* [Abstract (Draft)](doc/LEX2016_Pyrgeometer.pdf)
-* [Präsentation des Projektes](doc/LEX2016_Pyrgeometer_Praesentation.pdf)
+* [Extended Abstract (Draft)](doc/abstract/LEX2016_Pyrgeometer.pdf)
+* [Poster](doc/poster/LEX2016_Pyrgeometer.pdf)
+* [Präsentation des Projektes](doc/presentation/LEX2016_Pyrgeometer_Praesentation.pdf)
 
 # Weiterführende Links
 
